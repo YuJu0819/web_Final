@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import useSign from "./hooks/useSign";
 function Copyright(props) {
   return (
     <Typography
@@ -40,13 +40,23 @@ const theme = createTheme({
 const SignUp = ({ changeSignUp }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    // const data = new FormData(event.currentTarget);
+    // console.log({
+    //   email: data.get("email"),
+    //   password: data.get("password"),
+    // });
+    signAccount({ email: email, password: password });
+    changeSignUp();
   };
 
+  const emailChange = (e) => {
+    setEmail(e.target.value);
+  };
+  const passwordChange = (e) => {
+    setPassword(e.target.value);
+  };
+  const { sendAccount, signAccount, email, password, setEmail, setPassword } =
+    useSign();
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -101,6 +111,7 @@ const SignUp = ({ changeSignUp }) => {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={emailChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -112,6 +123,7 @@ const SignUp = ({ changeSignUp }) => {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={passwordChange}
                 />
               </Grid>
               <Grid item xs={12}>

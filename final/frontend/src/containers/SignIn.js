@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,6 +13,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { width } from "@mui/system";
+import useSign from "./hooks/useSign";
+import { Alert } from "@mui/material";
 
 const handleSignUp = () => {};
 
@@ -41,6 +43,20 @@ const darkTheme = createTheme({
   },
 });
 const SignIn = ({ changeSignUp }) => {
+  const {
+    sendAccount,
+    status,
+    displayStatus,
+    email,
+    password,
+    setEmail,
+    setPassword,
+    alerted,
+    setAlerted,
+  } = useSign();
+  //   const [email, setEmail] = useState("");
+  //   const [password, setPassword] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -48,8 +64,22 @@ const SignIn = ({ changeSignUp }) => {
       email: data.get("email"),
       password: data.get("password"),
     });
+    sendAccount({ email: email, password: password });
   };
 
+  const emailChange = (e) => {
+    setEmail(e.target.value);
+    setAlerted(false);
+  };
+  const passwordChange = (e) => {
+    setPassword(e.target.value);
+    setAlerted(false);
+  };
+  useEffect(() => {
+    // console.log(status);
+    // displayStatus(status);
+    // setAlerted(false);
+  }, [status]);
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
@@ -64,10 +94,18 @@ const SignIn = ({ changeSignUp }) => {
               marginTop: 8,
               display: "flex",
               flexDirection: "column",
+              justifyContent: "center",
               alignItems: "center",
               // bgcolor: "#3C3C3C",
             }}
           >
+            {/* {alerted ? (
+              <Alert variant="outlined" severity="error">
+                This is an error alert — check it out!
+              </Alert>
+            ) : (
+              <></>
+            )} */}
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
@@ -84,25 +122,28 @@ const SignIn = ({ changeSignUp }) => {
                 margin="normal"
                 required
                 fullWidth
+                error={alerted ? true : false}
                 id="email"
+                // label={alerted ? "Wrong account" : "Email Address"}
                 label="Email Address"
                 name="email"
                 autoComplete="email"
                 autoFocus
-                // sx={{ input: { color: "white" } }}
-                // InputLabelProps={{
-                //   style: { color: "#fff" },
-                // }}
+                onChange={emailChange}
+                helperText={alerted ? "Wrong email or password" : null}
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
+                error={alerted ? true : false}
                 name="password"
-                label="Password"
+                // label={alerted ? "Wrong account" : "password"}
+                label="password"
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={passwordChange}
                 // sx={{ input: { color: "white" } }}
                 // InputLabelProps={{
                 //   style: { color: "#fff" },
@@ -117,6 +158,7 @@ const SignIn = ({ changeSignUp }) => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                // onClick={sendAccount}
               >
                 Sign In
               </Button>
