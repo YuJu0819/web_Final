@@ -48,15 +48,24 @@ const SignUp = ({ changeSignUp }) => {
     signAccount({ email: email, password: password });
     changeSignUp();
   };
-
+  const nameChange = (e) => {
+    setName(e.target.value);
+  };
   const emailChange = (e) => {
     setEmail(e.target.value);
   };
   const passwordChange = (e) => {
     setPassword(e.target.value);
   };
-  const { sendAccount, signAccount, email, password, setEmail, setPassword } =
-    useSign();
+  const {
+    sendAccount,
+    signAccount,
+    email,
+    password,
+    setEmail,
+    setPassword,
+    setName,
+  } = useSign();
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -82,17 +91,18 @@ const SignUp = ({ changeSignUp }) => {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              {/* <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
                   name="firstName"
                   required
                   fullWidth
                   id="firstName"
-                  label="First Name"
+                  label="Name"
                   autoFocus
+                  onChange={nameChange}
                 />
-              </Grid> */}
+              </Grid>
               {/* <Grid item xs={12} sm={6}>
                 <TextField
                   required

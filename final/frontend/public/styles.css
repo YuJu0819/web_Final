@@ -1,0 +1,8 @@
+.font_title {
+  position: relative;
+  font-family: "Rubik Glitch", cursive;
+  font-size: 8vw;
+  display: flex;
+  justify-content: space-around;
+  top: 10vh;
+}

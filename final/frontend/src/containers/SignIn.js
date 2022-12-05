@@ -42,7 +42,7 @@ const darkTheme = createTheme({
     mode: "dark",
   },
 });
-const SignIn = ({ changeSignUp }) => {
+const SignIn = ({ changeSignUp, changeInHome }) => {
   const {
     sendAccount,
     status,
@@ -53,6 +53,8 @@ const SignIn = ({ changeSignUp }) => {
     setPassword,
     alerted,
     setAlerted,
+    inHome,
+    setInHome,
   } = useSign();
   //   const [email, setEmail] = useState("");
   //   const [password, setPassword] = useState("");
@@ -78,7 +80,9 @@ const SignIn = ({ changeSignUp }) => {
   useEffect(() => {
     // console.log(status);
     // displayStatus(status);
-    // setAlerted(false);
+    // setInHome(true);
+    changeInHome();
+    console.log("in useEffect");
   }, [status]);
   return (
     <ThemeProvider theme={darkTheme}>

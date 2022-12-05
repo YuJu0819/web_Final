@@ -8,6 +8,8 @@ const useSign = () => {
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState({});
   const [alerted, setAlerted] = useState(false);
+  const [inHome, setInHome] = useState(false);
+  const [name, setName] = useState("test name");
   const sendData = async (data) => {
     if (client.readyState >= 1) {
       console.log(data);
@@ -51,13 +53,18 @@ const useSign = () => {
     const [task, payload] = JSON.parse(data);
     switch (task) {
       case "logIn": {
+        console.log("log success");
+        setInHome(true);
         setStatus(payload);
         break;
       }
       case "status": {
         setAlerted(true);
         setStatus(payload);
+        break;
       }
+      default:
+        break;
     }
   };
   const sendAccount = (payload) => {
@@ -83,6 +90,10 @@ const useSign = () => {
     status,
     alerted,
     setAlerted,
+    inHome,
+    setInHome,
+    name,
+    setName,
   };
 };
 
