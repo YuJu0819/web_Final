@@ -1,8 +1,8 @@
 import logo from "./logo.svg";
 import "./App.css";
-import SignIn from "./containers/SignIn";
+import SignIn from "./containers/settings/SignIn";
 import { useState } from "react";
-import SignUp from "./containers/SignUp";
+import SignUp from "./containers/settings/SignUp";
 import useSign from "./containers/hooks/useSign";
 import HomePage from "./containers/HomePage";
 function App() {

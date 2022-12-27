@@ -1,7 +1,10 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { message } from "antd";
 import { Alert } from "@mui/material";
-const client = new WebSocket("ws://localhost:4000");
+import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
+import { CREATE_ACCOUNT_MUTATION, SIGN_IN_MUTATION } from "../../graphql";
+
+// const client = new WebSocket("ws://localhost:4000");
 
 const useSign = () => {
   const [email, setEmail] = useState("");
@@ -10,12 +13,12 @@ const useSign = () => {
   const [alerted, setAlerted] = useState(false);
   const [inHome, setInHome] = useState(false);
   const [name, setName] = useState("test name");
-  const sendData = async (data) => {
-    if (client.readyState >= 1) {
-      console.log(data);
-      await client.send(JSON.stringify(data));
-    }
-  };
+  //   const sendData = async (data) => {
+  //     if (client.readyState >= 1) {
+  //       console.log(data);
+  //       await client.send(JSON.stringify(data));
+  //     }
+  //   };
 
   const displayStatus = (s) => {
     if (s.msg) {
@@ -48,37 +51,39 @@ const useSign = () => {
       }
     }
   };
-  client.onmessage = (byteString) => {
-    const { data } = byteString;
-    const [task, payload] = JSON.parse(data);
-    switch (task) {
-      case "logIn": {
-        console.log("log success");
-        setInHome(true);
-        setStatus(payload);
-        break;
-      }
-      case "status": {
-        setAlerted(true);
-        setStatus(payload);
-        break;
-      }
-      default:
-        break;
-    }
-  };
-  const sendAccount = (payload) => {
-    // update messages and status
+  //   client.onmessage = (byteString) => {
+  //     const { data } = byteString;
+  //     const [task, payload] = JSON.parse(data);
+  //     switch (task) {
+  //       case "logIn": {
+  //         console.log("log success");
+  //         setInHome(true);
+  //         setStatus(payload);
+  //         break;
+  //       }
+  //       case "status": {
+  //         setAlerted(true);
+  //         setStatus(payload);
+  //         break;
+  //       }
+  //       default:
+  //         break;
+  //     }
+  //   };
+  //   const sendAccount = (payload) => {
+  //     // update messages and status
 
-    sendData(["signIn", payload]);
-    console.log(payload);
-  };
-  const signAccount = (payload) => {
-    console.log(payload);
-    sendData(["signUp", payload]);
+  //     sendData(["signIn", payload]);
+  //     console.log(payload);
+  //   };
+  //   const signAccount = (payload) => {
+  //     console.log(payload);
+  //     sendData(["signUp", payload]);
 
-    console.log(payload);
-  };
+  //     console.log(payload);
+  //   };
+  const [signAccount] = useMutation(CREATE_ACCOUNT_MUTATION);
+  const [sendAccount] = useMutation(SIGN_IN_MUTATION);
   return {
     sendAccount,
     signAccount,

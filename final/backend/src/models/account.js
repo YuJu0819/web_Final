@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 // Creating a schema, sort of like working with an ORM
 const AccountSchema = new Schema({
-  email: {
+  account: {
     type: String,
     required: [true, "Name field is required."],
   },
@@ -10,8 +10,19 @@ const AccountSchema = new Schema({
     type: String,
     required: [true, "Body field is required."],
   },
+  winlose: [
+    {
+      type: Boolean,
+    },
+  ],
+  character: {
+    type: String,
+  },
+  roomnum: {
+    type: Number,
+  },
 });
 // Creating a table within database with the defined schema
-const Account = mongoose.model("account", AccountSchema);
+const AccountModel = mongoose.model("account", AccountSchema);
 // Exporting table for querying and mutating
-export default Account;
+export default AccountModel;
