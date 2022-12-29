@@ -1,16 +1,21 @@
-import logo from "./logo.svg";
 import "./App.css";
-import SignIn from "./containers/settings/SignIn";
 import { useState } from "react";
-import SignUp from "./containers/settings/SignUp";
-import useSign from "./containers/hooks/useSign";
-import HomePage from "./containers/HomePage";
-import { CardProvider } from "./containers/hooks/useCard";
-import CardPage from "./containers/CardPage";
+
+import SignIn from "./sign/containers/settings/SignIn";
+import SignUp from "./sign/containers/settings/SignUp";
+import useSign from "./sign/containers/hooks/useSign";
+import HomePage from "./sign/containers/HomePage";
+
+import { CardProvider } from "./card/containers/hooks/useCard";
+import CardPage from "./card/containers/CardPage";
+
+import { RoomProvider } from "./room/containers/hooks/useRoom";
+import RoomPage from "./room/containers/RoomPage"
+
+
 function App() {
   const [signUp, setSignUp] = useState(false);
-  const { inHome, setInHome, inCard, setInCard, inRule, setInRule, setName } =
-    useSign();
+  const { inHome, setInHome, inCard, setInCard, inRule, setInRule, setName } =  useSign();
   const changeSignUp = () => {
     setSignUp((current) => !current);
   };
@@ -31,6 +36,17 @@ function App() {
   const set_Name = (tmp) => {
     setName(tmp);
   };
+
+  //For test room at 12/30 02:05
+  /*
+  return (
+    <RoomProvider>
+      <RoomPage/>
+    </RoomProvider>
+  );
+  */
+  //For test room at 12/30 02:05
+
   if (inHome) {
     return (
       <HomePage
@@ -45,7 +61,8 @@ function App() {
         <CardPage></CardPage>
       </CardProvider>
     );
-  } else if (!signUp)
+  } else if (!signUp){
+     console.log("signinPage")
     return (
       <SignIn
         changeSignUp={changeSignUp}
@@ -53,7 +70,8 @@ function App() {
         set_Name={set_Name}
       ></SignIn>
     );
-  else {
+  }else {
+    console.log("signupPage")
     return <SignUp changeSignUp={changeSignUp}></SignUp>;
   }
 }
