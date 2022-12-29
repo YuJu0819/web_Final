@@ -2,7 +2,12 @@ import { useState, useEffect, createContext, useContext } from "react";
 import { message } from "antd";
 import { Alert } from "@mui/material";
 import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
-import { CREATE_ACCOUNT_MUTATION, SIGN_IN_MUTATION } from "../../graphql";
+import {
+  CREATE_ACCOUNT_MUTATION,
+  SIGN_IN_MUTATION,
+  ACCOUNT_QUERY,
+  SELECTING_CHARACTER_MUTATION,
+} from "../../graphql";
 
 // const client = new WebSocket("ws://localhost:4000");
 
@@ -12,13 +17,18 @@ const useSign = () => {
   const [status, setStatus] = useState({});
   const [alerted, setAlerted] = useState(false);
   const [inHome, setInHome] = useState(false);
-  const [name, setName] = useState("test name");
+  const [inCard, setInCard] = useState(false);
+  const [inRule, setInRule] = useState(false);
+  const [name, setName] = useState("");
   //   const sendData = async (data) => {
   //     if (client.readyState >= 1) {
   //       console.log(data);
   //       await client.send(JSON.stringify(data));
   //     }
   //   };
+  const set_Name = (tmp) => {
+    setName(tmp);
+  };
 
   const displayStatus = (s) => {
     if (s.msg) {
@@ -84,6 +94,9 @@ const useSign = () => {
   //   };
   const [signAccount] = useMutation(CREATE_ACCOUNT_MUTATION);
   const [sendAccount] = useMutation(SIGN_IN_MUTATION);
+  const [selectCharacter] = useMutation(SELECTING_CHARACTER_MUTATION);
+  const [getAccount, { data, loading, subscribeToMore }] =
+    useLazyQuery(ACCOUNT_QUERY);
   return {
     sendAccount,
     signAccount,
@@ -99,6 +112,13 @@ const useSign = () => {
     setInHome,
     name,
     setName,
+    getAccount,
+    data,
+    selectCharacter,
+    inCard,
+    setInCard,
+    inRule,
+    setInRule,
   };
 };
 

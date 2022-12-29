@@ -10,6 +10,10 @@ const AccountSchema = new Schema({
     type: String,
     required: [true, "Body field is required."],
   },
+  name: {
+    type: String,
+    required: [true, "Name field is required."],
+  },
   winlose: [
     {
       type: Boolean,

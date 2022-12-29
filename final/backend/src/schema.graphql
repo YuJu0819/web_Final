@@ -1,10 +1,21 @@
 type Mutation {
-  createAccount(account: String!, password: String!): User!
+  createAccount(account: String!, password: String!, name: String!): User
   signAccount(account: String!, password: String!): User
+  selectCharacter(character: String!, account: String!): User!
 }
 
 type Query {
-  user(account: String!): User!
+  user(account: String!): User
+}
+
+type createType {
+  detect: String!
+}
+
+type Character {
+  id: String!
+  card: [Int]
+  skill: String
 }
 
 type Subscription {
@@ -14,6 +25,7 @@ type Subscription {
 type User {
   account: String!
   password: String!
+  name: String!
   winlose: [Boolean]
   character: String
   roomnumber: Int

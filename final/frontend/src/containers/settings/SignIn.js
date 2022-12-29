@@ -42,7 +42,7 @@ const darkTheme = createTheme({
     mode: "dark",
   },
 });
-const SignIn = ({ changeSignUp, changeInHome }) => {
+const SignIn = ({ changeSignUp, changeInHome, set_Name }) => {
   const {
     sendAccount,
     status,
@@ -55,7 +55,10 @@ const SignIn = ({ changeSignUp, changeInHome }) => {
     setAlerted,
     inHome,
     setInHome,
+    setName,
+    name,
   } = useSign();
+
   //   const [email, setEmail] = useState("");
   //   const [password, setPassword] = useState("");
 
@@ -66,13 +69,18 @@ const SignIn = ({ changeSignUp, changeInHome }) => {
       email: data.get("email"),
       password: data.get("password"),
     });
+
     let tmp = await sendAccount({
       variables: { account: email, password: password },
     });
 
+    if (tmp.data.signAccount === null) {
+      setAlerted(true);
+    }
     if (tmp.data.signAccount) {
+      await set_Name(tmp.data.signAccount.name);
       changeInHome();
-      console.log(tmp.data.signAccount);
+      console.log(name);
     }
   };
 
@@ -88,9 +96,10 @@ const SignIn = ({ changeSignUp, changeInHome }) => {
     // console.log(status);
     // displayStatus(status);
     // setInHome(true);
+    console.log(name);
     changeInHome();
     console.log("in useEffect");
-  }, [status]);
+  }, [name]);
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />

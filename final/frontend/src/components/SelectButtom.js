@@ -13,20 +13,21 @@ import { useState } from "react";
 import useGame from "../containers/hooks/useGame";
 import useSign from "../containers/hooks/useSign";
 const images = [
-  //   {
-  //     url: battle,
-  //     title: "Battle",
-  //     width: "30%",
-  //   },
+  {
+    url: battle,
+    title: "role 1",
+    width: "25%",
+    // left: "10%",
+  },
   {
     url: card,
-    title: "Cards",
-    width: "30%",
+    title: "role 2",
+    width: "25%",
   },
   {
     url: rule,
-    title: "Rules",
-    width: "30%",
+    title: "role 3",
+    width: "25%",
   },
 ];
 
@@ -34,7 +35,8 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
   position: "relative",
   display: "flex",
   justifyContent: "space-around",
-  height: 200,
+  height: 350,
+  left: "6vw",
   top: "20vh",
   [theme.breakpoints.down("sm")]: {
     width: "100% !important", // Overrides inline-style
@@ -97,12 +99,28 @@ const ImageMarked = styled("span")(({ theme }) => ({
   transition: theme.transitions.create("opacity"),
 }));
 
-const MainButton = ({ set_Card }) => {
-  const { gameMode, setGameMode } = useGame();
+const SelectButtom = ({
+  account,
+  selectCharacter,
+  setInSelect,
+  changeSignUp,
+}) => {
+  //   const { gameMode, setGameMode } = useGame();
   const { inCard, setInCard, inHome, setInHome, inRule, setInRule } = useSign();
   const [anchorEl, setAnchorEl] = useState(null);
   let open = Boolean(anchorEl);
+  const selecting = (index) => {
+    // console.log(index);
+    selectCharacter({
+      variables: {
+        character: index.toString(),
+        account: account,
+      },
+    });
+    changeSignUp();
+  };
 
+  //   const func_array = [select_A, select_B, select_C];
   const handleClick = (event) => {
     if (!anchorEl) setAnchorEl(event.currentTarget);
     else setAnchorEl(null);
@@ -111,82 +129,15 @@ const MainButton = ({ set_Card }) => {
     setAnchorEl(null);
     open = false;
   };
-  const handleCard = () => {
-    console.log("handleCard");
-    // setInCard(true);
-    // setInHome(false);
-    // setInRule(false);
-    set_Card();
-  };
-  const handleRule = () => {
-    console.log("handleRule");
-    setInRule(true);
-    setInCard(false);
-    setInHome(false);
-  };
-  const handlePVE = () => {
-    handleClose();
-    setGameMode("PVE");
-  };
-  const handlePVP = () => {
-    handleClose();
-    setGameMode("PVP");
-  };
-  const func_array = [handleCard, handleRule];
+
   return (
     <Box
       sx={{ display: "flex", flexWrap: "wrap", minWidth: 300, width: "100%" }}
     >
-      <ImageButton
-        focusRipple
-        key={"Battle"}
-        style={{
-          width: "30%",
-          margin: "1.5vw",
-        }}
-        id="basic-button"
-        aria-controls={open ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-      >
-        <ImageSrc style={{ backgroundImage: `url(${battle})` }} />
-        <ImageBackdrop className="MuiImageBackdrop-root" />
-        <Image>
-          <Typography
-            component="span"
-            variant="subtitle1"
-            color="inherit"
-            sx={{
-              position: "relative",
-              p: 4,
-              pt: 2,
-              pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
-              fontSize: "2.3vw",
-            }}
-          >
-            {"Battle"}
-            <ImageMarked className="MuiImageMarked-root" />
-          </Typography>
-        </Image>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-        >
-          <MenuItem onClick={handlePVP}>P.V.P</MenuItem>
-          <MenuItem onClick={handlePVE}>P.V.E</MenuItem>
-          {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
-        </Menu>
-      </ImageButton>
       {images.map((image, index) => (
         <ImageButton
           focusRipple
-          onClick={func_array[index]}
+          onClick={() => selecting(index)}
           key={image.title}
           style={{
             width: image.width,
@@ -218,4 +169,4 @@ const MainButton = ({ set_Card }) => {
   );
 };
 
-export default MainButton;
+export default SelectButtom;
