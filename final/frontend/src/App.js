@@ -76,6 +76,12 @@ function App() {
     );
   } else if (inCard) {
     return <CardPage changeInHome={changeInHome} />;
+  } else if (inRoom) {
+    return (
+      <RoomProvider>
+        <RoomPage />
+      </RoomProvider>
+    );
   } else if (!signUp) {
     console.log("signinPage");
     return (
