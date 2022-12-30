@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "frontend": "cd final/frontend && yarn start",
-    "backend": "cd final/backend && yarn server"
+    "backend": "cd final/backend && yarn start"
   },
   "keywords": [],
   "author": "",

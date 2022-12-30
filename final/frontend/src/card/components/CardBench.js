@@ -1,23 +1,23 @@
-import { Box } from "@mui/material";
-import { useCard } from "../containers/hooks/useCard";
-import AddBlock from "./AddBlock";
+import { Box } from '@mui/material';
+import AddBlock from './AddBlock';
 
 const CardBench = () => {
-  const { cards } = useCard();
+  const cards = Array(15).fill(0);
+  console.log(cards);
   return (
     <Box
       sx={{
-        width: "100%",
-        height: "95%",
-        display: "flex",
-        flex: "flex-start",
-        flexWrap: "wrap",
-        justifyContent: "space-around",
-        alignItems: "center",
+        width: '100%',
+        height: '95%',
+        display: 'flex',
+        flex: 'flex-start',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        alignItems: 'center',
       }}
     >
       {cards.map((item, index) =>
-        item === 0 ? <AddBlock key={index}></AddBlock> : null
+        item === 0 ? <AddBlock key={index} card={index}></AddBlock> : null
       )}
     </Box>
   );
