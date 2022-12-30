@@ -1,0 +1,11 @@
+#Board{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  height: 95vh;
+  width: 95vw;
+  margin: auto;
+  background: url('../img/background.jpg');
+  flex-wrap: nowrap;
+}
