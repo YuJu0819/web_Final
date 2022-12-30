@@ -6,6 +6,16 @@ const Query = {
     }
     return null;
   },
+  cards: async (parent, { character }, { CharacterModel }) => {
+    const existing = await CharacterModel.findOne({ id: character });
+    if (existing) return existing.cards;
+    return null;
+  },
+  skill: async (parent, { character }, { CharacterModel }) => {
+    const existing = await CharacterModel.findOne({ id: character });
+    if (existing) return existing.skill;
+    return null;
+  },
 };
 
 export default Query;
