@@ -38,13 +38,13 @@ function App() {
   };
 
   //For test room at 12/30 02:05
-  /*
+  
   return (
     <RoomProvider>
       <RoomPage/>
     </RoomProvider>
   );
-  */
+  
   //For test room at 12/30 02:05
 
   if (inHome) {

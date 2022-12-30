@@ -2,19 +2,15 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: 5vh;
   width: 5vh;
   margin: auto;
-  opacity: 1;
 `;
 
 const Cell = ({x, y, value, hover, legal}) => {
     let id = x + '-' + y + '_' + value;
     let link = require('../img/block0.jpg');
-    let opacity = true;
+    let opacity = false;
 
     if(hover === 1 || hover === 2){
         if(!legal){
@@ -40,7 +36,7 @@ const Cell = ({x, y, value, hover, legal}) => {
                 ?
                 <img src={link} style={{height: '5vh', width: '5vh', opacity :'0.5'}}/>
                 :
-                <img src={link} style={{height: '5vh', width: '5vh'}}/>}
+                <img src={link} style={{height: '5vh', width: '5vh', opacity: '1'}}/>}
             </div>
         </Wrapper>
     );

@@ -9,8 +9,9 @@ const Wrapper = styled.div`
   height: 90vh;
   width: 10vw;
   margin: auto;
-  border: 1px solid gold; 
   flex-wrap: wrap;
+  border-radius: 10vh;
+  background-color: rgba(30, 35, 45, 0.6);;
 `;
 
 const ScoreWrapper = styled.div`
@@ -21,12 +22,12 @@ const ScoreWrapper = styled.div`
     height: 15%;
     width: 10vw;
     margin: auto;
-    border: 1px solid gold;
-    font-size: 10vh;
+    font-size: 4vw;
     font-family: 'Futura';
     font-weight: 900;
     color: white;
-`
+`;
+//  border: 1px solid gold; 
 
 const Score = () => {
     const { score } = useRoom();
@@ -35,6 +36,9 @@ const Score = () => {
         <Wrapper>
             <ScoreWrapper>
                 {score[0]}
+            </ScoreWrapper>
+            <ScoreWrapper>
+               V.S.
             </ScoreWrapper>
             <ScoreWrapper>
                 {score[1]}
