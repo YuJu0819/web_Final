@@ -6,7 +6,8 @@ import cardBase from './data/cardbase';
 import CardModel from './models/card';
 
 const initdata = async () => {
-  const existing = await CharacterModel.findOne({ id: 'yuju' });
+  await CharacterModel.deleteMany({});
+  const existing = await CharacterModel.findOne({ id: '0' });
   if (!existing) {
     for (let i = 0; i < 3; i++) {
       const character = await new CharacterModel(characterBase[i]).save();

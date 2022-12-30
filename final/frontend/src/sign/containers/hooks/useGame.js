@@ -1,14 +1,27 @@
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext } from 'react';
 
-const useGame = () => {
-  const [gameMode, setGameMode] = useState("");
+const GameContext = createContext({
+  gameMode: '',
+  user: {},
+  setUser: () => {},
+  setGameMode: () => {},
+});
+const GameProvider = (props) => {
+  const [gameMode, setGameMode] = useState('');
   const [user, setUser] = useState({});
-  return {
-    gameMode,
-    setGameMode,
-    user,
-    setUser,
-  };
-};
 
-export default useGame;
+  return (
+    <GameContext.Provider
+      value={{
+        gameMode,
+        setGameMode,
+        user,
+        setUser,
+      }}
+      {...props}
+    />
+  );
+};
+const useGame = () => useContext(GameContext);
+
+export { GameProvider, useGame };

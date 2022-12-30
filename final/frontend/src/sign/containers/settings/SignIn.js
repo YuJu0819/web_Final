@@ -1,37 +1,37 @@
-import { useState, useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { width } from "@mui/system";
-import useSign from "../hooks/useSign";
-import { Alert } from "@mui/material";
-import useGame from "../hooks/useGame";
+import { useState, useEffect } from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { width } from '@mui/system';
+import useSign from '../hooks/useSign';
+import { Alert } from '@mui/material';
+import { useGame } from '../hooks/useGame';
 const handleSignUp = () => {};
 
 const Copyright = (props) => {
   return (
     <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
+      variant='body2'
+      color='text.secondary'
+      align='center'
       {...props}
     >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
+      {'Copyright © '}
+      <Link color='inherit' href='https://mui.com/'>
         Your Website
-      </Link>{" "}
+      </Link>{' '}
       {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Typography>
   );
 };
@@ -39,7 +39,7 @@ const Copyright = (props) => {
 const theme = createTheme();
 const darkTheme = createTheme({
   palette: {
-    mode: "dark",
+    mode: 'dark',
   },
 });
 const SignIn = ({ changeSignUp, changeInHome, set_Name, set_User }) => {
@@ -66,8 +66,8 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name, set_User }) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+      email: data.get('email'),
+      password: data.get('password'),
     });
 
     let tmp = await sendAccount({
@@ -79,8 +79,10 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name, set_User }) => {
     }
     console.log(tmp);
     if (tmp.data.signAccount) {
-      console.log(tmp.data.signAccount.name, "set User");
-      setUser({ account: email, name: tmp.data.signAccount.name });
+      console.log(tmp.data.signAccount.name, 'set User');
+      console.log(tmp.data.signAccount);
+      setUser(tmp.data.signAccount);
+      changeInHome();
       //   set_User(email, tmp.data.signAccount.name);
 
       //   set_Name(tmp.data.signAccount.name);
@@ -103,24 +105,24 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name, set_User }) => {
     // setInHome(true);
     console.log(user);
     changeInHome(user);
-    console.log("in useEffect");
+    console.log('in useEffect');
   }, [user]);
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <main style={{ height: "100vh" }}>
+      <main style={{ height: '100vh' }}>
         <Container
-          component="main"
-          maxWidth="xs"
+          component='main'
+          maxWidth='xs'
           //   sx={{ bgcolor: "#3C3C3C", height: 1 }}
         >
           <Box
             sx={{
               marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
               // bgcolor: "#3C3C3C",
             }}
           >
@@ -131,43 +133,43 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name, set_User }) => {
             ) : (
               <></>
             )} */}
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
-            <Typography component="h1" variant="h5">
+            <Typography component='h1' variant='h5'>
               Sign in
             </Typography>
             <Box
-              component="form"
+              component='form'
               onSubmit={handleSubmit}
               noValidate
               sx={{ mt: 1 }}
             >
               <TextField
-                margin="normal"
+                margin='normal'
                 required
                 fullWidth
                 error={alerted ? true : false}
-                id="email"
+                id='email'
                 // label={alerted ? "Wrong account" : "Email Address"}
-                label="Account"
-                name="email"
-                autoComplete="email"
+                label='Account'
+                name='email'
+                autoComplete='email'
                 autoFocus
                 onChange={emailChange}
-                helperText={alerted ? "Wrong email or password" : null}
+                helperText={alerted ? 'Wrong email or password' : null}
               />
               <TextField
-                margin="normal"
+                margin='normal'
                 required
                 fullWidth
                 error={alerted ? true : false}
-                name="password"
+                name='password'
                 // label={alerted ? "Wrong account" : "password"}
-                label="password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+                label='password'
+                type='password'
+                id='password'
+                autoComplete='current-password'
                 onChange={passwordChange}
                 // sx={{ input: { color: "white" } }}
                 // InputLabelProps={{
@@ -175,13 +177,13 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name, set_User }) => {
                 // }}
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+                control={<Checkbox value='remember' color='primary' />}
+                label='Remember me'
               />
               <Button
-                type="submit"
+                type='submit'
                 fullWidth
-                variant="contained"
+                variant='contained'
                 sx={{ mt: 3, mb: 2 }}
                 // onClick={sendAccount}
               >
@@ -195,10 +197,10 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name, set_User }) => {
                 </Grid> */}
                 <Grid item>
                   <Link
-                    href="#"
-                    variant="body2"
+                    href='#'
+                    variant='body2'
                     onClick={changeSignUp}
-                    component="button"
+                    component='button'
                   >
                     {"Don't have an account? Sign Up"}
                   </Link>

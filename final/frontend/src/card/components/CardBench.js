@@ -1,8 +1,7 @@
 import { Box } from '@mui/material';
 import AddBlock from './AddBlock';
 
-const CardBench = () => {
-  const cards = Array(15).fill(0);
+const CardBench = ({ cards }) => {
   console.log(cards);
   return (
     <Box
@@ -16,9 +15,9 @@ const CardBench = () => {
         alignItems: 'center',
       }}
     >
-      {cards.map((item, index) =>
-        item === 0 ? <AddBlock key={index} card={index}></AddBlock> : null
-      )}
+      {cards.map((item, index) => (
+        <AddBlock key={index} card={item}></AddBlock>
+      ))}
     </Box>
   );
 };
