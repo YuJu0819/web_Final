@@ -1,51 +1,27 @@
-import { Fab } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { Box } from "@mui/material";
-import { useCard } from "../containers/hooks/useCard";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-const AddBlock = () => {
-  const { setDrawer, removeStatus } = useCard();
+import { Box } from '@mui/material';
+
+const AddBlock = ({ card }) => {
+  const link = require(`../img/card${card + 1}.png`);
   return (
     <Box
       sx={{
-        width: "12%",
-        height: "28%",
-        marginLeft: "40px",
-        marginRight: "40px",
-        background: "grey",
+        width: '175px',
+        height: '225px',
+        marginLeft: '50px',
+        marginRight: '50px',
+        background: 'grey',
         opacity: 0.8,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: "8%",
-        position: "relative",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: '8%',
+        position: 'relative',
       }}
     >
-      <Fab
-        size="small"
-        color="error"
-        aria-label="remove"
-        sx={{
-          position: "relative",
-          top: "-44%",
-          left: "-28%",
-          visibility: removeStatus ? "visible" : "hidden",
-        }}
-      >
-        <RemoveCircleOutlineIcon fontSize="small" />
-      </Fab>
-      <Fab
-        size="50px"
-        color="default"
-        aria-label="add"
-        onClick={setDrawer}
-        sx={{
-          position: "relative",
-          left: "-12%",
-        }}
-      >
-        <AddIcon fontSize="large"></AddIcon>
-      </Fab>
+      <img
+        src={link}
+        style={{ width: '100%', height: '100%', borderRadius: '6%' }}
+      />
     </Box>
   );
 };

@@ -1,21 +1,20 @@
-import "./App.css";
-import { useState } from "react";
+import './App.css';
+import { useState } from 'react';
 
-import SignIn from "./sign/containers/settings/SignIn";
-import SignUp from "./sign/containers/settings/SignUp";
-import useSign from "./sign/containers/hooks/useSign";
-import HomePage from "./sign/containers/HomePage";
+import SignIn from './sign/containers/settings/SignIn';
+import SignUp from './sign/containers/settings/SignUp';
+import useSign from './sign/containers/hooks/useSign';
+import HomePage from './sign/containers/HomePage';
 
-import { CardProvider } from "./card/containers/hooks/useCard";
-import CardPage from "./card/containers/CardPage";
+import CardPage from './card/containers/CardPage';
 
-import { RoomProvider } from "./room/containers/hooks/useRoom";
-import RoomPage from "./room/containers/RoomPage"
-
+import { RoomProvider } from './room/containers/hooks/useRoom';
+import RoomPage from './room/containers/RoomPage';
 
 function App() {
   const [signUp, setSignUp] = useState(false);
-  const { inHome, setInHome, inCard, setInCard, inRule, setInRule, setName } =  useSign();
+  const { inHome, setInHome, inCard, setInCard, inRule, setInRule, setName } =
+    useSign();
   const changeSignUp = () => {
     setSignUp((current) => !current);
   };
@@ -38,13 +37,13 @@ function App() {
   };
 
   //For test room at 12/30 02:05
-  
-  return (
-    <RoomProvider>
-      <RoomPage/>
-    </RoomProvider>
-  );
-  
+
+  // return (
+  //   <RoomProvider>
+  //     <RoomPage/>
+  //   </RoomProvider>
+  // );
+
   //For test room at 12/30 02:05
 
   if (inHome) {
@@ -56,13 +55,9 @@ function App() {
       ></HomePage>
     );
   } else if (inCard) {
-    return (
-      <CardProvider>
-        <CardPage></CardPage>
-      </CardProvider>
-    );
-  } else if (!signUp){
-     console.log("signinPage")
+    return <CardPage changeInHome={changeInHome} />;
+  } else if (!signUp) {
+    console.log('signinPage');
     return (
       <SignIn
         changeSignUp={changeSignUp}
@@ -70,8 +65,8 @@ function App() {
         set_Name={set_Name}
       ></SignIn>
     );
-  }else {
-    console.log("signupPage")
+  } else {
+    console.log('signupPage');
     return <SignUp changeSignUp={changeSignUp}></SignUp>;
   }
 }
