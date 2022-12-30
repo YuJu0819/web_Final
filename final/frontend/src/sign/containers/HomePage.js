@@ -8,17 +8,19 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Title from "../components/Title";
 import useSign from "./hooks/useSign";
 import { useEffect } from "react";
+import useGame from "./hooks/useGame";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
 });
-const HomePage = ({ changeInHome, set_Card }) => {
+const HomePage = ({ changeInHome, set_Card, set_Rule, set_Room }) => {
   //   const theme = createTheme();
   const { data, getAccount, inHome, email, setName, set_Name, name } =
     useSign();
+  const { user, setUser } = useGame();
   useEffect(() => {
-    console.log(name);
+    console.log(name, email);
     getAccount({ variables: { account: email } });
     // setName(data.)
     console.log(data);
@@ -27,14 +29,18 @@ const HomePage = ({ changeInHome, set_Card }) => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <main style={{ height: "100vh", width: "100vw" }}>
-        <HeadBar changeInHome={changeInHome}></HeadBar>
+        <HeadBar changeInHome={changeInHome} name={user.name}></HeadBar>
         <Container
           component="main"
           maxWidth="100vw"
           //   sx={{ bgcolor: "#3C3C3C", height: 1 }}
         >
           <Title></Title>
-          <MainButton set_Card={set_Card}></MainButton>
+          <MainButton
+            set_Card={set_Card}
+            set_Room={set_Room}
+            set_Rule={set_Rule}
+          ></MainButton>
         </Container>
       </main>
     </ThemeProvider>

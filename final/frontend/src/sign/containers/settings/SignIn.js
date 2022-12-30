@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { width } from "@mui/system";
 import useSign from "../hooks/useSign";
 import { Alert } from "@mui/material";
-
+import useGame from "../hooks/useGame";
 const handleSignUp = () => {};
 
 const Copyright = (props) => {
@@ -58,7 +58,7 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name }) => {
     setName,
     name,
   } = useSign();
-
+  const { user, setUser } = useGame();
   //   const [email, setEmail] = useState("");
   //   const [password, setPassword] = useState("");
 
@@ -77,8 +77,11 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name }) => {
     if (tmp.data.signAccount === null) {
       setAlerted(true);
     }
+    console.log(tmp);
     if (tmp.data.signAccount) {
-      await set_Name(tmp.data.signAccount.name);
+      console.log(tmp.data.signAccount.name);
+      setUser({ account: email, name: tmp.data.signAccount.name });
+      //   set_Name(tmp.data.signAccount.name);
       changeInHome();
       console.log(name);
     }

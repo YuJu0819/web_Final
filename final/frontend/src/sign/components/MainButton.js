@@ -97,7 +97,7 @@ const ImageMarked = styled("span")(({ theme }) => ({
   transition: theme.transitions.create("opacity"),
 }));
 
-const MainButton = ({ set_Card }) => {
+const MainButton = ({ set_Card, set_Room, set_Rule }) => {
   const { gameMode, setGameMode } = useGame();
   const { inCard, setInCard, inHome, setInHome, inRule, setInRule } = useSign();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -127,10 +127,12 @@ const MainButton = ({ set_Card }) => {
   const handlePVE = () => {
     handleClose();
     setGameMode("PVE");
+    set_Room();
   };
   const handlePVP = () => {
     handleClose();
     setGameMode("PVP");
+    set_Room();
   };
   const func_array = [handleCard, handleRule];
   return (

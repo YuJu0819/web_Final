@@ -13,10 +13,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useSign from "../containers/hooks/useSign";
-const HeadBar = ({ changeInHome }) => {
+const HeadBar = ({ changeInHome, name }) => {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { name } = useSign();
+  //   const { name } = useSign();
   const handleChange = (event) => {
     setAuth(event.target.checked);
   };

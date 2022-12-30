@@ -20,6 +20,7 @@ const useSign = () => {
   const [inCard, setInCard] = useState(false);
   const [inRule, setInRule] = useState(false);
   const [name, setName] = useState("");
+  const [inRoom, setInRoom] = useState(false);
   //   const sendData = async (data) => {
   //     if (client.readyState >= 1) {
   //       console.log(data);
@@ -119,6 +120,8 @@ const useSign = () => {
     setInCard,
     inRule,
     setInRule,
+    inRoom,
+    setInRoom,
   };
 };
 
