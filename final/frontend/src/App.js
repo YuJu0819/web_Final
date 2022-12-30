@@ -5,7 +5,7 @@ import SignIn from "./sign/containers/settings/SignIn";
 import SignUp from "./sign/containers/settings/SignUp";
 import useSign from "./sign/containers/hooks/useSign";
 import HomePage from "./sign/containers/HomePage";
-
+import useGame from "./sign/containers/hooks/useGame";
 import CardPage from "./card/containers/CardPage";
 
 import { RoomProvider } from "./room/containers/hooks/useRoom";
@@ -24,12 +24,23 @@ function App() {
     setInRoom,
     inRoom,
   } = useSign();
+  const { user, setUser } = useGame();
 
   const changeSignUp = () => {
     setSignUp((current) => !current);
+    setInCard(false);
+    setInHome(false);
+    setInRule(false);
+    setInRoom(false);
   };
-  const changeInHome = () => {
+  const changeInHome = (data) => {
     setInHome((current) => !current);
+    setInCard(false);
+    setInRule(false);
+    setInRoom(false);
+
+    // console.log(data);
+    setUser(data);
   };
 
   const set_Card = () => {
@@ -51,8 +62,12 @@ function App() {
     setInCard(false);
     setInRule(false);
   };
+
   const set_Name = (tmp) => {
     setName(tmp);
+  };
+  const set_User = (account, name) => {
+    setUser({ account: account, name: name });
   };
 
   //For test room at 12/30 02:05
@@ -72,6 +87,7 @@ function App() {
         set_Card={set_Card}
         set_Rule={set_Rule}
         set_Room={set_Room}
+        user={user}
       ></HomePage>
     );
   } else if (inCard) {
@@ -89,6 +105,7 @@ function App() {
         changeSignUp={changeSignUp}
         changeInHome={changeInHome}
         set_Name={set_Name}
+        set_User={set_User}
       ></SignIn>
     );
   } else {

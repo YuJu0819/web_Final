@@ -42,7 +42,7 @@ const darkTheme = createTheme({
     mode: "dark",
   },
 });
-const SignIn = ({ changeSignUp, changeInHome, set_Name }) => {
+const SignIn = ({ changeSignUp, changeInHome, set_Name, set_User }) => {
   const {
     sendAccount,
     status,
@@ -79,10 +79,12 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name }) => {
     }
     console.log(tmp);
     if (tmp.data.signAccount) {
-      console.log(tmp.data.signAccount.name);
+      console.log(tmp.data.signAccount.name, "set User");
       setUser({ account: email, name: tmp.data.signAccount.name });
+      //   set_User(email, tmp.data.signAccount.name);
+
       //   set_Name(tmp.data.signAccount.name);
-      changeInHome();
+      //   changeInHome();
       console.log(name);
     }
   };
@@ -99,10 +101,10 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name }) => {
     // console.log(status);
     // displayStatus(status);
     // setInHome(true);
-    console.log(name);
-    changeInHome();
+    console.log(user);
+    changeInHome(user);
     console.log("in useEffect");
-  }, [name]);
+  }, [user]);
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
@@ -186,11 +188,11 @@ const SignIn = ({ changeSignUp, changeInHome, set_Name }) => {
                 Sign In
               </Button>
               <Grid container>
-                <Grid item xs>
+                {/* <Grid item xs>
                   <Link href="#" variant="body2">
                     Forgot password?
                   </Link>
-                </Grid>
+                </Grid> */}
                 <Grid item>
                   <Link
                     href="#"

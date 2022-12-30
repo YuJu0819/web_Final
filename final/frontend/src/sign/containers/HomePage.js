@@ -14,13 +14,13 @@ const darkTheme = createTheme({
     mode: "dark",
   },
 });
-const HomePage = ({ changeInHome, set_Card, set_Rule, set_Room }) => {
+const HomePage = ({ changeInHome, set_Card, set_Rule, set_Room, user }) => {
   //   const theme = createTheme();
   const { data, getAccount, inHome, email, setName, set_Name, name } =
     useSign();
-  const { user, setUser } = useGame();
+  //   const { user, setUser } = useGame();
   useEffect(() => {
-    console.log(name, email);
+    console.log(user);
     getAccount({ variables: { account: email } });
     // setName(data.)
     console.log(data);

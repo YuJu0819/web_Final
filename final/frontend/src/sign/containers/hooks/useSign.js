@@ -98,6 +98,10 @@ const useSign = () => {
   const [selectCharacter] = useMutation(SELECTING_CHARACTER_MUTATION);
   const [getAccount, { data, loading, subscribeToMore }] =
     useLazyQuery(ACCOUNT_QUERY);
+  useEffect(() => {
+    getAccount({ account: email });
+    console.log(email, data);
+  }, [inHome]);
   return {
     sendAccount,
     signAccount,
