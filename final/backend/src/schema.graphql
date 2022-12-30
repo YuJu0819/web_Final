@@ -6,6 +6,8 @@ type Mutation {
 
 type Query {
   user(account: String!): User
+  cards(character: String!): [Int!]
+  skill(character: String!): String!
 }
 
 type createType {
@@ -14,7 +16,7 @@ type createType {
 
 type Character {
   id: String!
-  card: [Int]
+  cards: [Int]
   skill: String
 }
 

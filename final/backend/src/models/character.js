@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const CharacterSchema = new Schema({
   id: {
     type: String,
   },
-  card: [
+  cards: [
     {
       type: Number,
     },
@@ -15,6 +15,6 @@ const CharacterSchema = new Schema({
   },
 });
 
-const CharacterModel = mongoose.model("character", CharacterSchema);
+const CharacterModel = mongoose.model('character', CharacterSchema);
 
 export default CharacterModel;
