@@ -1,25 +1,25 @@
-import { useState, useEffect, createContext, useContext } from "react";
-import { message } from "antd";
-import { Alert } from "@mui/material";
-import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
+import { useState, useEffect, createContext, useContext } from 'react';
+import { message } from 'antd';
+import { Alert } from '@mui/material';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import {
   CREATE_ACCOUNT_MUTATION,
   SIGN_IN_MUTATION,
   ACCOUNT_QUERY,
   SELECTING_CHARACTER_MUTATION,
-} from "../../../graphql";
+} from '../../../graphql';
 
 // const client = new WebSocket("ws://localhost:4000");
 
 const useSign = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [status, setStatus] = useState({});
   const [alerted, setAlerted] = useState(false);
   const [inHome, setInHome] = useState(false);
   const [inCard, setInCard] = useState(false);
   const [inRule, setInRule] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [inRoom, setInRoom] = useState(false);
   //   const sendData = async (data) => {
   //     if (client.readyState >= 1) {
@@ -39,19 +39,19 @@ const useSign = () => {
         duration: 0.5,
       };
       switch (type) {
-        case "logIn":
+        case 'logIn':
           //   setAlerted(false);
           return (
-            <Alert variant="outlined" severity="success">
+            <Alert variant='outlined' severity='success'>
               This is a success alert — check it out!
             </Alert>
           );
           break;
-        case "logFail":
+        case 'logFail':
           console.log(s);
 
           return (
-            <Alert variant="outlined" severity="error">
+            <Alert variant='outlined' severity='error'>
               This is an error alert — check it out!
             </Alert>
           );

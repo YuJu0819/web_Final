@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 const ACCOUNT_QUERY = gql`
   query user($account: String!) {
@@ -12,5 +12,10 @@ const ACCOUNT_QUERY = gql`
     }
   }
 `;
+const CARDS_QUERY = gql`
+  query cards($character: String!) {
+    cards(character: $character)
+  }
+`;
 
-export { ACCOUNT_QUERY };
+export { ACCOUNT_QUERY, CARDS_QUERY };

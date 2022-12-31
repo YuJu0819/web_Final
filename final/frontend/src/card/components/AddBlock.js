@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 
 const AddBlock = ({ card }) => {
-  const link = require(`../img/card${card + 1}.png`);
+  const link = require(`../img/card${card}.png`);
   return (
     <Box
       sx={{

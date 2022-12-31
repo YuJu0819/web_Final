@@ -1,15 +1,16 @@
-import "./App.css";
-import { useState } from "react";
+import './App.css';
+import { useEffect, useState } from 'react';
 
-import SignIn from "./sign/containers/settings/SignIn";
-import SignUp from "./sign/containers/settings/SignUp";
-import useSign from "./sign/containers/hooks/useSign";
-import HomePage from "./sign/containers/HomePage";
-import useGame from "./sign/containers/hooks/useGame";
-import CardPage from "./card/containers/CardPage";
+import SignIn from './sign/containers/settings/SignIn';
+import SignUp from './sign/containers/settings/SignUp';
+import useSign from './sign/containers/hooks/useSign';
+import HomePage from './sign/containers/HomePage';
 
-import { RoomProvider } from "./room/containers/hooks/useRoom";
-import RoomPage from "./room/containers/RoomPage";
+import CardPage from './card/containers/CardPage';
+import { GameProvider, useGame } from './sign/containers/hooks/useGame';
+
+import { RoomProvider } from './room/containers/hooks/useRoom';
+import RoomPage from './room/containers/RoomPage';
 
 function App() {
   const [signUp, setSignUp] = useState(false);
@@ -82,34 +83,44 @@ function App() {
 
   if (inHome) {
     return (
-      <HomePage
-        changeInHome={changeInHome}
-        set_Card={set_Card}
-        set_Rule={set_Rule}
-        set_Room={set_Room}
-        user={user}
-      ></HomePage>
+      <GameProvider>
+        <HomePage
+          changeInHome={changeInHome}
+          set_Card={set_Card}
+          set_Rule={set_Rule}
+          set_Room={set_Room}
+          user={user}
+        ></HomePage>
+      </GameProvider>
     );
   } else if (inCard) {
-    return <CardPage changeInHome={changeInHome} />;
+    return (
+      <GameProvider>
+        <CardPage changeInHome={changeInHome} />
+      </GameProvider>
+    );
   } else if (inRoom) {
     return (
-      <RoomProvider>
-        <RoomPage />
-      </RoomProvider>
+      <GameProvider>
+        <RoomProvider>
+          <RoomPage />
+        </RoomProvider>
+      </GameProvider>
     );
   } else if (!signUp) {
-    console.log("signinPage");
+    console.log('signinPage');
     return (
-      <SignIn
-        changeSignUp={changeSignUp}
-        changeInHome={changeInHome}
-        set_Name={set_Name}
-        set_User={set_User}
-      ></SignIn>
+      <GameProvider>
+        <SignIn
+          changeSignUp={changeSignUp}
+          changeInHome={changeInHome}
+          set_Name={set_Name}
+          set_User={set_User}
+        ></SignIn>
+      </GameProvider>
     );
   } else {
-    console.log("signupPage");
+    console.log('signupPage');
     return <SignUp changeSignUp={changeSignUp}></SignUp>;
   }
 }
