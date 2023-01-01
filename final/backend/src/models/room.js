@@ -12,7 +12,7 @@ const RoomShema = new Schema({
       account: { type: String },
       character: { type: String },
       handcard: [{ type: Number }],
-      score: [{ type: Number }],
+      score: { type: Number },
     },
   ],
   turn: {

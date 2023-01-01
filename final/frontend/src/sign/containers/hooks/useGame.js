@@ -1,14 +1,15 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext } from "react";
 
 const GameContext = createContext({
-  gameMode: '',
+  gameMode: "",
   user: {},
   setUser: () => {},
   setGameMode: () => {},
 });
 const GameProvider = (props) => {
-  const [gameMode, setGameMode] = useState('');
+  const [gameMode, setGameMode] = useState("");
   const [user, setUser] = useState({});
+  const [roomNum, setRoomNum] = useState();
 
   return (
     <GameContext.Provider
@@ -17,6 +18,8 @@ const GameProvider = (props) => {
         setGameMode,
         user,
         setUser,
+        roomNum,
+        setRoomNum,
       }}
       {...props}
     />

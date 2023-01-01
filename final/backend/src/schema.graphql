@@ -2,6 +2,7 @@ type Mutation {
   createAccount(account: String!, password: String!, name: String!): User
   signAccount(account: String!, password: String!): User
   selectCharacter(character: String!, account: String!): User!
+  createRoom(id: Int!, user: gameUser): Room
 }
 
 type Query {
@@ -33,6 +34,24 @@ type User {
   roomnumber: Int
 }
 
+input gameUser {
+  account: String
+  character: String
+  handcard: [Int]
+  score: Int
+}
+
+type gamePlayer {
+  account: String
+  character: String
+  handcard: [Int]
+  score: Int
+}
+
 type Room {
   id: String!
+  turn: Int
+  map: [[Int]]
+  timer: Int
+  users: [gamePlayer]
 }

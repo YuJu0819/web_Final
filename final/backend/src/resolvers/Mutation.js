@@ -27,11 +27,12 @@ const Mutation = {
     //   $and: [{ account: account }, { password: hash }],
     // });
     let existing = tmp;
-    if (existing) {
+    if (same) {
       return existing;
     }
     return null;
   },
+
   selectCharacter: async (
     parent,
     { character, account },
@@ -44,6 +45,23 @@ const Mutation = {
     );
     let output = await AccountModel.findOne({ account: account });
     return output;
+  },
+
+  createRoom: async (parent, { id, user }, { RoomModel }) => {
+    let new_room = await new RoomModel({
+      id: id,
+      users: [
+        {
+          account: user.account,
+          character: user.character,
+          handcard: user.handcard,
+          score: user.score,
+        },
+      ],
+      turn: "10",
+      timer: 30,
+    }).save();
+    return new_room;
   },
 };
 

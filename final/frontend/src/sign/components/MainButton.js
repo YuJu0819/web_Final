@@ -8,10 +8,14 @@ import card from "./static/test-remove.png";
 import rule from "./static/rule.png";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import SearchIcon from "@mui/icons-material/Search";
+import { TextField, IconButton } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useGame } from "../containers/hooks/useGame";
 import useSign from "../containers/hooks/useSign";
+import { useRef } from "react";
 const images = [
   //   {
   //     url: battle,
@@ -96,16 +100,22 @@ const ImageMarked = styled("span")(({ theme }) => ({
   left: "calc(50% - 9px)",
   transition: theme.transitions.create("opacity"),
 }));
+const ariaLabel = { "aria-label": "description" };
 
 const MainButton = ({ set_Card, set_Room, set_Rule }) => {
-  const { gameMode, setGameMode } = useGame();
+  const { gameMode, setGameMode, roomNum, setRoomNum } = useGame();
   const { inCard, setInCard, inHome, setInHome, inRule, setInRule } = useSign();
   const [anchorEl, setAnchorEl] = useState(null);
+  const numRef = useRef();
   let open = Boolean(anchorEl);
 
   const handleClick = (event) => {
-    if (!anchorEl) setAnchorEl(event.currentTarget);
-    else setAnchorEl(null);
+    if (!anchorEl) {
+      setAnchorEl(event.currentTarget);
+    }
+    // else setAnchorEl(null);
+    console.log(numRef);
+    if (numRef.current) numRef.current.focus();
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -132,7 +142,25 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
     setGameMode("PVP");
     set_Room();
   };
+  const handleOpen = (e) => {
+    // setAnchorEl(e.currentTarget);
+    open = true;
+  };
+  const handleRoomnum = (e) => {
+    setRoomNum(e.target.value);
+  };
+
   const func_array = [handleCard, handleRule];
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (numRef.current) numRef.current.focus();
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
   return (
     <Box
       sx={{ display: "flex", flexWrap: "wrap", minWidth: 300, width: "100%" }}
@@ -178,11 +206,30 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
             "aria-labelledby": "basic-button",
           }}
         >
+          {/* <Input placeholder="Placeholder" inputProps={ariaLabel} /> */}
+
+          <MenuItem sx={{ display: "flex", alignItems: "center" }}>
+            <TextField
+              helperText=" "
+              id="demo-helper-text-aligned-no-helper"
+              label="Room number"
+              onClick={handleOpen}
+              inputRef={(input) => input?.focus()}
+              ref={numRef}
+              //   inputRef={(input) => input && input.focus()}
+              autoFocus
+              sx={{ top: 10 }}
+              onChange={handleRoomnum}
+            />
+            <IconButton type="button" sx={{ p: "1.5vw" }} aria-label="search">
+              <SearchIcon />
+            </IconButton>
+          </MenuItem>
           <MenuItem onClick={handlePVP}>P.V.P</MenuItem>
           <MenuItem onClick={handlePVE}>P.V.E</MenuItem>
-          {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
         </Menu>
       </ImageButton>
+
       {images.map((image, index) => (
         <ImageButton
           focusRipple
