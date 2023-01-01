@@ -108,7 +108,11 @@ function App() {
       </GameProvider>
     );
   } else if (inRule) {
-    return <Rule changeInHome={changeInHome}></Rule>;
+    return (
+      <GameProvider>
+        <Rule changeInHome={changeInHome}></Rule>
+      </GameProvider>
+    );
   } else if (!signUp) {
     console.log("signinPage");
     return (
