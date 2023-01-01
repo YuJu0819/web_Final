@@ -1,16 +1,16 @@
-import './App.css';
-import { useEffect, useState } from 'react';
+import "./App.css";
+import { useEffect, useState } from "react";
 
-import SignIn from './sign/containers/settings/SignIn';
-import SignUp from './sign/containers/settings/SignUp';
-import useSign from './sign/containers/hooks/useSign';
-import HomePage from './sign/containers/HomePage';
+import SignIn from "./sign/containers/settings/SignIn";
+import SignUp from "./sign/containers/settings/SignUp";
+import useSign from "./sign/containers/hooks/useSign";
+import HomePage from "./sign/containers/HomePage";
+import Rule from "./rule/containers/Rule";
+import CardPage from "./card/containers/CardPage";
+import { GameProvider, useGame } from "./sign/containers/hooks/useGame";
 
-import CardPage from './card/containers/CardPage';
-import { GameProvider, useGame } from './sign/containers/hooks/useGame';
-
-import { RoomProvider } from './room/containers/hooks/useRoom';
-import RoomPage from './room/containers/RoomPage';
+import { RoomProvider } from "./room/containers/hooks/useRoom";
+import RoomPage from "./room/containers/RoomPage";
 
 function App() {
   const [signUp, setSignUp] = useState(false);
@@ -107,8 +107,10 @@ function App() {
         </RoomProvider>
       </GameProvider>
     );
+  } else if (inRule) {
+    return <Rule changeInHome={changeInHome}></Rule>;
   } else if (!signUp) {
-    console.log('signinPage');
+    console.log("signinPage");
     return (
       <GameProvider>
         <SignIn
@@ -120,7 +122,7 @@ function App() {
       </GameProvider>
     );
   } else {
-    console.log('signupPage');
+    console.log("signupPage");
     return <SignUp changeSignUp={changeSignUp}></SignUp>;
   }
 }

@@ -20,7 +20,8 @@ const Mutation = {
   },
   signAccount: async (parent, { account, password }) => {
     let tmp = await AccountModel.findOne({ account: account });
-    let same = bcrypt.compareSync(password, tmp.password);
+    let same;
+    if (tmp) same = bcrypt.compareSync(password, tmp.password);
     console.log(same);
     // let existing = await AccountModel.findOne({
     //   $and: [{ account: account }, { password: hash }],

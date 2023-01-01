@@ -10,8 +10,10 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import useGame from "../containers/hooks/useGame";
+import { useGame } from "../containers/hooks/useGame";
 import useSign from "../containers/hooks/useSign";
+// import useGame from "../containers/hooks/useGame";
+
 const images = [
   {
     url: battle,
@@ -107,6 +109,7 @@ const SelectButtom = ({
 }) => {
   //   const { gameMode, setGameMode } = useGame();
   const { inCard, setInCard, inHome, setInHome, inRule, setInRule } = useSign();
+  const { user, setUser } = useGame();
   const [anchorEl, setAnchorEl] = useState(null);
   let open = Boolean(anchorEl);
   const selecting = (index) => {
@@ -117,6 +120,8 @@ const SelectButtom = ({
         account: account,
       },
     });
+    user.character = index.toString();
+    console.log(user);
     changeSignUp();
   };
 
