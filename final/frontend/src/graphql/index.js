@@ -7,3 +7,4 @@ export {
   ADD_USER_TO_ROOM,
 } from "./mutation";
 export { ACCOUNT_QUERY, ROOM_QUERY } from "./query";
+export { GAME_SUBSCRIPTION } from "./subscription";

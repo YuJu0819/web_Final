@@ -21,6 +21,7 @@ const GameProvider = (props) => {
   const [addUserToRoom] = useMutation(ADD_USER_TO_ROOM);
   const [getRoom, { data, loading, subscribeToMore }] =
     useLazyQuery(ROOM_QUERY);
+
   return (
     <GameContext.Provider
       value={{
@@ -35,6 +36,7 @@ const GameProvider = (props) => {
         data,
         addRoomToUser,
         addUserToRoom,
+        subscribeToMore,
       }}
       {...props}
     />

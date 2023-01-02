@@ -12,6 +12,7 @@ type Query {
   cards(character: String!): [Int!]
   skill(character: String!): String!
   room(id: String!): Room
+  player(roomID: String!): Room
 }
 
 type createType {
@@ -25,7 +26,7 @@ type Character {
 }
 
 type Subscription {
-  gaming(p1: String!, p2: String): Room!
+  gameStart(roomID: String!, user1: String!): Room
 }
 
 type User {
