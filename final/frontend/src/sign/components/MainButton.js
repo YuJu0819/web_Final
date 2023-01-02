@@ -197,6 +197,7 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
         },
       });
     }
+    set_Room();
   };
 
   const func_array = [handleCard, handleRule];
