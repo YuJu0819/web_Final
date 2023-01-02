@@ -103,7 +103,19 @@ const ImageMarked = styled("span")(({ theme }) => ({
 const ariaLabel = { "aria-label": "description" };
 
 const MainButton = ({ set_Card, set_Room, set_Rule }) => {
-  const { gameMode, setGameMode, roomNum, setRoomNum } = useGame();
+  const {
+    gameMode,
+    setGameMode,
+    roomNum,
+    setRoomNum,
+    createRoom,
+    user,
+    getRoom,
+    data,
+    addRoomToUser,
+    addUserToRoom,
+  } = useGame();
+
   const { inCard, setInCard, inHome, setInHome, inRule, setInRule } = useSign();
   const [anchorEl, setAnchorEl] = useState(null);
   const numRef = useRef();
@@ -138,29 +150,57 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
     set_Room();
   };
   const handlePVP = () => {
+    const num = (Math.floor(Math.random() * 9000) + 1000).toString();
+    setRoomNum(num);
     handleClose();
     setGameMode("PVP");
     set_Room();
+    // console.log(user);
+    createRoom({
+      variables: {
+        id: num,
+        user: { account: user.account, character: user.character, score: 0 },
+      },
+    });
+    addRoomToUser({
+      variables: {
+        roomID: num,
+        userAccount: user.account,
+      },
+    });
   };
   const handleOpen = (e) => {
     // setAnchorEl(e.currentTarget);
     open = true;
   };
   const handleRoomnum = (e) => {
-    setRoomNum(e.target.value);
+    setRoomNum(e.target.value.toString());
+  };
+  const searchRoom = async () => {
+    const tmp = await getRoom({
+      variables: {
+        id: roomNum,
+      },
+    });
+    console.log(tmp.data);
+    if (tmp.data) {
+      addRoomToUser({
+        variables: {
+          roomID: roomNum,
+          userAccount: user.account,
+        },
+      });
+      addUserToRoom({
+        variables: {
+          roomID: roomNum,
+          userAccount: user.account,
+        },
+      });
+    }
   };
 
   const func_array = [handleCard, handleRule];
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (numRef.current) numRef.current.focus();
-    }, 100);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
   return (
     <Box
       sx={{ display: "flex", flexWrap: "wrap", minWidth: 300, width: "100%" }}
@@ -221,7 +261,12 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
               sx={{ top: 10 }}
               onChange={handleRoomnum}
             />
-            <IconButton type="button" sx={{ p: "1.5vw" }} aria-label="search">
+            <IconButton
+              type="button"
+              sx={{ p: "1.5vw" }}
+              aria-label="search"
+              onClick={searchRoom}
+            >
               <SearchIcon />
             </IconButton>
           </MenuItem>
