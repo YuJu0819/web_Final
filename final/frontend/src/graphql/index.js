@@ -2,5 +2,8 @@ export {
   CREATE_ACCOUNT_MUTATION,
   SIGN_IN_MUTATION,
   SELECTING_CHARACTER_MUTATION,
+  CREATE_ROOM_MUTATION,
+  ADD_ROOM_TO_USER,
+  ADD_USER_TO_ROOM,
 } from "./mutation";
-export { ACCOUNT_QUERY } from "./query";
+export { ACCOUNT_QUERY, ROOM_QUERY } from "./query";

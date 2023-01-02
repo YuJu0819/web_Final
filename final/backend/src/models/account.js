@@ -23,7 +23,7 @@ const AccountSchema = new Schema({
     type: String,
   },
   roomnum: {
-    type: Number,
+    type: String,
   },
 });
 // Creating a table within database with the defined schema

@@ -1,4 +1,5 @@
 import AccountModel from "../models/account";
+import CharacterModel from "../models/character";
 import bcrypt from "bcrypt";
 const saltRound = 10;
 const Mutation = {
@@ -33,35 +34,73 @@ const Mutation = {
     return null;
   },
 
-  selectCharacter: async (
-    parent,
-    { character, account },
-    { CharacterModel }
-  ) => {
-    let existing = await CharacterModel.findOne({ id: character });
-    let tmp = await AccountModel.updateOne(
-      { account: account },
-      { character: character }
-    );
-    let output = await AccountModel.findOne({ account: account });
-    return output;
-  },
+  selectCharacter: async (parent, { character, account }) =>
+    // { CharacterModel }
+    {
+      let existing = await CharacterModel.findOne({ id: character });
+      let tmp = await AccountModel.updateOne(
+        { account: account },
+        { character: character }
+      );
+      let output = await AccountModel.findOne({ account: account });
+      return output;
+    },
 
-  createRoom: async (parent, { id, user }, { RoomModel }) => {
+  createRoom: async (parent, { id, user }, { RoomModel, CharacterModel }) => {
+    let tmp = await CharacterModel.findOne({ id: user.character });
+    console.log(tmp, user.character);
     let new_room = await new RoomModel({
       id: id,
       users: [
         {
           account: user.account,
           character: user.character,
-          handcard: user.handcard,
+          handcard: tmp.cards,
           score: user.score,
         },
       ],
-      turn: "10",
+      turn: 10,
       timer: 30,
     }).save();
     return new_room;
+  },
+  addUserToRoom: async (
+    parent,
+    { roomID, userAccount },
+    { RoomModel, CharacterModel }
+  ) => {
+    const user = await AccountModel.findOne({ account: userAccount });
+    const userCard = await CharacterModel.findOne({ id: user.character });
+
+    const room = await RoomModel.findOne({ id: roomID });
+    console.log(room, userCard);
+    await RoomModel.updateOne(
+      { id: roomID },
+      {
+        users: [
+          ...room.users,
+          {
+            account: user.account,
+            character: user.character,
+            handcard: userCard.cards,
+            score: 0,
+          },
+        ],
+      }
+    );
+    return room;
+  },
+
+  addRoomToUser: async (parent, { roomID, userAccount }, { RoomModel }) => {
+    const user = await AccountModel.findOne({ account: userAccount });
+
+    const room = await RoomModel.findOne({ id: roomID });
+
+    await AccountModel.updateOne(
+      { account: user.account },
+      { roomnum: roomID }
+    );
+    return user;
   },
 };
 

@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 const ACCOUNT_QUERY = gql`
   query user($account: String!) {
@@ -18,4 +18,21 @@ const CARDS_QUERY = gql`
   }
 `;
 
-export { ACCOUNT_QUERY, CARDS_QUERY };
+const ROOM_QUERY = gql`
+  query room($id: String!) {
+    room(id: $id) {
+      id
+      turn
+      map
+      timer
+      users {
+        account
+        character
+        handcard
+        score
+      }
+    }
+  }
+`;
+
+export { ACCOUNT_QUERY, CARDS_QUERY, ROOM_QUERY };

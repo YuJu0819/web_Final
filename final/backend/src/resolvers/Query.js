@@ -16,6 +16,11 @@ const Query = {
     if (existing) return existing.skill;
     return null;
   },
+  room: async (parent, { id }, { RoomModel }) => {
+    const existing = await RoomModel.findOne({ id: id });
+    if (existing) return existing;
+    return null;
+  },
 };
 
 export default Query;

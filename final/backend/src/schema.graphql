@@ -2,13 +2,16 @@ type Mutation {
   createAccount(account: String!, password: String!, name: String!): User
   signAccount(account: String!, password: String!): User
   selectCharacter(character: String!, account: String!): User!
-  createRoom(id: Int!, user: gameUser): Room
+  createRoom(id: String!, user: gameUser): Room
+  addUserToRoom(roomID: String!, userAccount: String!): Room
+  addRoomToUser(roomID: String!, userAccount: String!): User
 }
 
 type Query {
   user(account: String!): User
   cards(character: String!): [Int!]
   skill(character: String!): String!
+  room(id: String!): Room
 }
 
 type createType {
@@ -31,7 +34,7 @@ type User {
   name: String!
   winlose: [Boolean]
   character: String
-  roomnumber: Int
+  roomnumber: String
 }
 
 input gameUser {
