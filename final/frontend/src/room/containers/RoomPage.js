@@ -6,7 +6,7 @@ function Room() {
   const { startGame } = useRoom();
   const [ifStart, setIfStart] = useState(false);
   const start = () => {
-    startGame(18, 9, [2, 4], [15, 4]);
+    startGame(23, 11, [19, 5], [3, 5]);
     setIfStart(true);
   }
 

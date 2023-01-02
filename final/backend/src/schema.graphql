@@ -54,7 +54,11 @@ type gamePlayer {
 type Room {
   id: String!
   turn: Int
-  map: [[Int]]
+  map: [rows]
   timer: Int
   users: [gamePlayer]
+}
+
+type rows {
+  row: [Int]
 }
