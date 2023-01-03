@@ -13,7 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useSign from "../containers/hooks/useSign";
-const HeadBar = ({ changeInHome, name }) => {
+const HeadBar = ({ changeInHome, name, set_Account }) => {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   //   const { name } = useSign();
@@ -41,6 +41,10 @@ const HeadBar = ({ changeInHome, name }) => {
       },
     },
   });
+  const handleAccount = () => {
+    handleClose();
+    set_Account();
+  };
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -87,7 +91,7 @@ const HeadBar = ({ changeInHome, name }) => {
                   onClose={handleClose}
                 >
                   <MenuItem onClick={handleLogout}>Log out</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleAccount}>My account</MenuItem>
                 </Menu>
               </div>
             )}

@@ -103,7 +103,7 @@ const ImageMarked = styled("span")(({ theme }) => ({
 }));
 const ariaLabel = { "aria-label": "description" };
 
-const MainButton = ({ set_Card, set_Room, set_Rule }) => {
+const MainButton = ({ set_Card, set_Room, set_Rule, set_Account }) => {
   const {
     gameMode,
     setGameMode,
