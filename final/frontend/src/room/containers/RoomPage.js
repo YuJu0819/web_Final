@@ -1,17 +1,17 @@
-import Board from './Board';
-import { useRoom } from './hooks/useRoom';
-import { useEffect, useState } from 'react';
-import { USERS_IN_ROOM_SUBSCRIPTION, ROOM_QUERY } from '../../graphql';
-import { useQuery } from '@apollo/client';
-import { useGame } from '../../sign/containers/hooks/useGame';
-import { useEffect } from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
-import { useGame } from '../../sign/containers/hooks/useGame';
+import Board from "./Board";
+import { useRoom } from "./hooks/useRoom";
+import { useEffect, useState } from "react";
+import { USERS_IN_ROOM_SUBSCRIPTION, ROOM_QUERY } from "../../graphql";
+import { useQuery } from "@apollo/client";
+import { useGame } from "../../sign/containers/hooks/useGame";
+// import { useEffect } from "react";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+// import { useGame } from "../../sign/containers/hooks/useGame";
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
   },
 });
 function Room() {
@@ -30,7 +30,8 @@ function Room() {
       variables: { roomId: roomNum },
       updateQuery: (prev, { subscriptionData }) => {
         if (subscriptionData) {
-          setIfStart(subscriptionData.data);
+          //   setIfStart(subscriptionData.data)
+          start();
         }
         return prev;
       },
@@ -45,11 +46,11 @@ function Room() {
     return (
       <ThemeProvider theme={darkTheme}>
         <CssBaseline></CssBaseline>
-        <div className='font_select'>Room ID: {roomNum}</div>
+        <div className="font_select">Room ID: {roomNum}</div>
         <br />
         <br />
         <br />
-        <div className='font_select'>waiting for oponent...</div>
+        <div className="font_select">waiting for oponent...</div>
       </ThemeProvider>
     );
   else {

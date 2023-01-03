@@ -20,7 +20,7 @@ const GameProvider = (props) => {
   const [createRoom] = useMutation(CREATE_ROOM_MUTATION);
   const [addRoomToUser] = useMutation(ADD_ROOM_TO_USER);
   const [addUserToRoom] = useMutation(ADD_USER_TO_ROOM);
-  const [getRoom, { data, loading, subscribeToMore }] =
+  const [getRoom, { data, loading, subscribeToMore, refetch }] =
     useLazyQuery(ROOM_QUERY);
 
   return (
@@ -38,6 +38,7 @@ const GameProvider = (props) => {
         addRoomToUser,
         addUserToRoom,
         subscribeToMore,
+        refetch,
       }}
       {...props}
     />

@@ -1,6 +1,6 @@
-import AccountModel from '../models/account';
-import CharacterModel from '../models/character';
-import bcrypt from 'bcrypt';
+import AccountModel from "../models/account";
+import CharacterModel from "../models/character";
+import bcrypt from "bcrypt";
 const saltRound = 10;
 const Mutation = {
   createAccount: async (parent, { account, password, name }) => {
@@ -105,7 +105,7 @@ const Mutation = {
   addUserToRoom: async (
     parent,
     { roomID, userAccount },
-    { RoomModel, CharacterModel }
+    { RoomModel, CharacterModel, pubsub }
   ) => {
     const user = await AccountModel.findOne({ account: userAccount });
     const userCard = await CharacterModel.findOne({ id: user.character });

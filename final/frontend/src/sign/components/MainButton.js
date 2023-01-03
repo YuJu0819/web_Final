@@ -159,19 +159,19 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
     setGameMode("PVP");
     set_Room();
     // console.log(user);
-    subscribeToMore({
-      document: GAME_SUBSCRIPTION,
-      variables: { roomID: roomNum, user1: user.account },
+    // subscribeToMore({
+    //   document: GAME_SUBSCRIPTION,
+    //   variables: { roomID: roomNum, user1: user.account },
 
-      updateQuery: (prev, { subscriptionData }) => {
-        console.log(subscriptionData.data);
-        if (!subscriptionData.data) return prev;
-        // if (subscriptionData.data.room.users.length === 2) {
-        //   start();
-        // }
-        return subscriptionData.data.room;
-      },
-    });
+    //   updateQuery: (prev, { subscriptionData }) => {
+    //     console.log(subscriptionData.data);
+    //     if (!subscriptionData.data) return prev;
+    //     // if (subscriptionData.data.room.users.length === 2) {
+    //     //   start();
+    //     // }
+    //     return subscriptionData.data.room;
+    //   },
+    // });
     createRoom({
       variables: {
         id: num,
@@ -200,19 +200,19 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
     });
     console.log(tmp.data);
     if (tmp.data.room !== null) {
-      subscribeToMore({
-        document: GAME_SUBSCRIPTION,
-        variables: { roomID: roomNum, user1: user.account },
+      //   subscribeToMore({
+      //     document: GAME_SUBSCRIPTION,
+      //     variables: { roomID: roomNum, user1: user.account },
 
-        updateQuery: (prev, { subscriptionData }) => {
-          console.log(subscriptionData.data);
-          if (!subscriptionData.data) return prev;
-          // if (subscriptionData.data.room.users.length === 2) {
-          //   start();
-          // }
-          return subscriptionData.data.room;
-        },
-      });
+      //     updateQuery: (prev, { subscriptionData }) => {
+      //       console.log(subscriptionData.data);
+      //       if (!subscriptionData.data) return prev;
+      //       // if (subscriptionData.data.room.users.length === 2) {
+      //       //   start();
+      //       // }
+      //       return subscriptionData.data.room;
+      //     },
+      //   });
       addRoomToUser({
         variables: {
           roomID: roomNum,
