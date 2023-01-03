@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Card from '../componets/Card';
 import Button from '../componets/Button';
+import { useRoom } from './hooks/useRoom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,15 +27,15 @@ let deck1 = [
 let cardNum = [0,1,2,3]
 
 const Deck = () => {
-    const decodecard = (arr) => {
-        //card size 5*5
-    }
+
+    const {chooseACard} = useRoom();
+
     return(
         <Wrapper>
-            <Card id = {cardNum[0]}/>
-            <Card id = {cardNum[1]}/>
-            <Card id = {cardNum[2]}/>
-            <Card id = {cardNum[3]}/>
+            <Card id = {cardNum[0]} chooseACard = {chooseACard}/>
+            <Card id = {cardNum[1]} chooseACard = {chooseACard}/>
+            <Card id = {cardNum[2]} chooseACard = {chooseACard}/>
+            <Card id = {cardNum[3]} chooseACard = {chooseACard}/>
             <Button id = {'skip'}/>
             <Button id = {'skill'}/>
         </Wrapper>

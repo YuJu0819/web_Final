@@ -23,7 +23,9 @@ const ROOM_QUERY = gql`
     room(id: $id) {
       id
       turn
-      map
+      map {
+        row
+      }
       timer
       users {
         account

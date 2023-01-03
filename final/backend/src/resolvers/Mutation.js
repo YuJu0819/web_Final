@@ -45,7 +45,7 @@ const Mutation = {
       let output = await AccountModel.findOne({ account: account });
       return output;
     },
-
+  /*
   createRoom: async (parent, { id, user }, { RoomModel, CharacterModel }) => {
     let tmp = await CharacterModel.findOne({ id: user.character });
     console.log(tmp, user.character);
@@ -64,17 +64,55 @@ const Mutation = {
     }).save();
     return new_room;
   },
+*/
+  createRoom: async (parent, { id, user }, { RoomModel, CharacterModel }) => {
+    let tmp = await CharacterModel.findOne({ id: user.character });
+    console.log(tmp, user.character);
+
+    let row = 23;
+    let column = 11;
+    let pos_1 = [19, 5];
+    let pos_2 = [3, 5];
+    let arr = Array(row)
+      .fill(0)
+      .map((x) => Array(column).fill(0));
+    arr[pos_1[0]][pos_1[1]] = 1;
+    arr[pos_2[0]][pos_2[1]] = 2;
+
+    let mapArr = Array(row).fill(0);
+    for (let i = 0; i < row; i++) {
+      mapArr[i] = { row: arr[i] };
+    }
+    //console.log(typeof(mapArr))
+    //console.log((mapArr[0].row))
+
+    let new_room = await new RoomModel({
+      id: id,
+      users: [
+        {
+          account: user.account,
+          character: user.character,
+          handcard: tmp.cards,
+          score: user.score,
+        },
+      ],
+      map: mapArr,
+      turn: 10,
+      timer: 30,
+    }).save();
+    return new_room;
+  },
   addUserToRoom: async (
     parent,
     { roomID, userAccount },
-    { RoomModel, CharacterModel, pubsub }
+    { RoomModel, CharacterModel }
   ) => {
     const user = await AccountModel.findOne({ account: userAccount });
     const userCard = await CharacterModel.findOne({ id: user.character });
 
     const room = await RoomModel.findOne({ id: roomID });
     console.log(room, userCard);
-    await RoomModel.updateOne(
+    const output = await RoomModel.updateOne(
       { id: roomID },
       {
         users: [

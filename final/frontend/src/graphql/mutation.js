@@ -53,7 +53,9 @@ const CREATE_ROOM_MUTATION = gql`
     createRoom(id: $id, user: $user) {
       id
       turn
-      map
+      map {
+        row
+      }
       timer
       users {
         account
@@ -83,7 +85,9 @@ const ADD_USER_TO_ROOM = gql`
     addUserToRoom(roomID: $roomID, userAccount: $userAccount) {
       id
       turn
-      map
+      map {
+        row
+      }
       timer
       users {
         account

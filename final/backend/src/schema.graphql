@@ -12,6 +12,7 @@ type Query {
   cards(character: String!): [Int!]
   skill(character: String!): String!
   room(id: String!): Room
+  player(roomID: String!): Room
 }
 
 type createType {
@@ -55,7 +56,11 @@ type gamePlayer {
 type Room {
   id: String!
   turn: Int
-  map: [[Int]]
+  map: [rows]
   timer: Int
   users: [gamePlayer]
+}
+
+type rows {
+  row: [Int]
 }
