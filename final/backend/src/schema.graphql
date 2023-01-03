@@ -26,7 +26,8 @@ type Character {
 }
 
 type Subscription {
-  gameStart(roomID: String!, user1: String!): Room
+  gaming(p1: String!, p2: String): Room!
+  usersInRoom(roomId: String!): Boolean!
 }
 
 type User {

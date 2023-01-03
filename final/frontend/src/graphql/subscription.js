@@ -1,22 +1,9 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
-const GAME_SUBSCRIPTION = gql`
-  subscription gameStart($roomID: String!, $user1: String!) {
-    gameStart(roomID: $roomID, user1: $user1) {
-      id
-      turn
-      map {
-        row
-      }
-      timer
-      users {
-        account
-        character
-        handcard
-        score
-      }
-    }
+const USERS_IN_ROOM_SUBSCRIPTION = gql`
+  subscription usersInRoom($roomId: String!) {
+    usersInRoom(roomId: $roomId)
   }
 `;
 
-export { GAME_SUBSCRIPTION };
+export { USERS_IN_ROOM_SUBSCRIPTION };

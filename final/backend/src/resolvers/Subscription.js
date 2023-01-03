@@ -1,6 +1,9 @@
 const Subscription = {
-  gameStart: async (parent, { roomID, user1 }, { RoomModel, pubsub }) => {
-    return pubsub.subscribe(`room ${roomID}, ${user1}`);
+  usersInRoom: {
+    subscribe: (parent, { roomId }, { pubsub }) => {
+      console.log('sub:', pubsub.subscribe(`usersIn${roomId}`));
+      return pubsub.subscribe(`usersIn${roomId}`);
+    },
   },
 };
 
