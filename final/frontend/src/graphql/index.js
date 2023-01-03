@@ -5,5 +5,8 @@ export {
   CREATE_ROOM_MUTATION,
   ADD_ROOM_TO_USER,
   ADD_USER_TO_ROOM,
-} from "./mutation";
-export { ACCOUNT_QUERY, ROOM_QUERY } from "./query";
+  PLACE_CARD,
+} from './mutation';
+export { ACCOUNT_QUERY, ROOM_QUERY, CARD_QUERY  } from './query';
+
+export { USERS_IN_ROOM_SUBSCRIPTION } from './subscription';

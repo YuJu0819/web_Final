@@ -30,7 +30,9 @@ const Map = () => {
         //更新(MapArr),(Cell)
     return(
         <Wrapper>
-            {mapArr.map((row, index) => {
+            {
+            mapArr.length === 1 ? <div>loading map...</div> :
+            mapArr.map((row, index) => {
                 let indexOut = index;
                 return (
                     <div id={indexOut} style={{display:'flex'}} key={indexOut}>
@@ -49,7 +51,8 @@ const Map = () => {
                     )}
                     </div>
                 )
-            })}
+            })
+            }
         </Wrapper>
             
     );

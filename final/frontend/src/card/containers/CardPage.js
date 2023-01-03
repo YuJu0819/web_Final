@@ -1,20 +1,21 @@
-import CardBench from '../components/CardBench';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Container, Fab } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { useEffect, useState } from 'react';
-import useSign from '../../sign/containers/hooks/useSign';
-import { useLazyQuery, useQuery } from '@apollo/client';
-import { CARDS_QUERY } from '../../graphql/query';
-import { useGame } from '../../sign/containers/hooks/useGame';
+import CardBench from "../components/CardBench";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Box, Container, Fab } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { useEffect, useState } from "react";
+import useSign from "../../sign/containers/hooks/useSign";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { CARDS_QUERY } from "../../graphql/query";
+import { useGame } from "../../sign/containers/hooks/useGame";
+import HeadBar from "../components/HeadBar";
 
 const CardPage = ({ changeInHome }) => {
   const { user } = useGame();
   let cards = [];
   console.log(user);
   const { data } = useQuery(CARDS_QUERY, {
-    variables: { character: user ? user.character : '' },
+    variables: { character: user ? user.character : "" },
   });
   if (data) {
     cards = data.cards;
@@ -22,9 +23,9 @@ const CardPage = ({ changeInHome }) => {
   console.log(cards);
   const darkTheme = createTheme({
     palette: {
-      mode: 'dark',
+      mode: "dark",
       primary: {
-        main: '#1976d2',
+        main: "#1976d2",
       },
     },
   });
@@ -33,15 +34,15 @@ const CardPage = ({ changeInHome }) => {
       <CssBaseline />
       <Box
         sx={{
-          margin: '0px',
-          width: '97vw',
-          height: '96vh',
-          display: 'flex',
-          flexWrap: 'wrap',
-          overflow: 'unset',
+          margin: "0px",
+          width: "97vw",
+          height: "96vh",
+          display: "flex",
+          flexWrap: "wrap",
+          overflow: "unset",
         }}
       >
-        <Box sx={{ width: '100%' }}>
+        {/* <Box sx={{ width: '100%' }}>
           <Fab
             id='back'
             size='large'
@@ -55,7 +56,8 @@ const CardPage = ({ changeInHome }) => {
           >
             <ArrowBackIcon fontSize='large' />
           </Fab>
-        </Box>
+        </Box> */}
+        <HeadBar changeInHome={changeInHome}></HeadBar>
         <CardBench cards={cards} />
       </Box>
     </ThemeProvider>

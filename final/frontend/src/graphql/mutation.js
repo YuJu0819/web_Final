@@ -62,6 +62,11 @@ const CREATE_ROOM_MUTATION = gql`
         character
         handcard
         score
+        used {
+          cardid
+          rotate
+          position
+        }
       }
     }
   }
@@ -94,11 +99,39 @@ const ADD_USER_TO_ROOM = gql`
         character
         handcard
         score
+        used {
+          cardid
+          rotate
+          position
+        }
       }
     }
   }
 `;
 
+const PLACE_CARD = gql`
+  mutation placeCard($roomID: String!, $userNum: Int!, $id: Int!, $rotate: Int!, $pos: [Int]){
+    placeCard(roomID: $roomID, userNum: $userNum, id: $id, rotate: $rotate, pos: $pos){
+      id
+      turn
+      map {
+        row
+      }
+      timer
+      users {
+        account
+        character
+        handcard
+        score
+        used {
+          cardid
+          rotate
+          position
+        }
+      }
+    }
+  }
+`
 export {
   CREATE_ACCOUNT_MUTATION,
   SIGN_IN_MUTATION,
@@ -106,4 +139,5 @@ export {
   CREATE_ROOM_MUTATION,
   ADD_ROOM_TO_USER,
   ADD_USER_TO_ROOM,
+  PLACE_CARD,
 };

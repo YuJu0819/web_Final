@@ -13,6 +13,11 @@ const RoomShema = new Schema({
       character: { type: String },
       handcard: [{ type: Number }],
       score: { type: Number },
+      used: {
+        cardid: { type: Number },
+        rotate: { type: Number },
+        position: [{ type: Number }],
+      },
     },
   ],
   turn: {

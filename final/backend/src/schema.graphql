@@ -5,6 +5,7 @@ type Mutation {
   createRoom(id: String!, user: gameUser): Room
   addUserToRoom(roomID: String!, userAccount: String!): Room
   addRoomToUser(roomID: String!, userAccount: String!): User
+  placeCard(roomID: String!, userNum:Int!, id:Int!, rotate:Int!, pos:[Int]): Room
 }
 
 type Query {
@@ -12,6 +13,8 @@ type Query {
   cards(character: String!): [Int!]
   skill(character: String!): String!
   room(id: String!): Room
+  card(id: Int!): [Int!]
+  player(roomID: String!): Room
 }
 
 type createType {
@@ -26,6 +29,7 @@ type Character {
 
 type Subscription {
   gaming(p1: String!, p2: String): Room!
+  usersInRoom(roomId: String!): Boolean!
 }
 
 type User {
@@ -49,6 +53,7 @@ type gamePlayer {
   character: String
   handcard: [Int]
   score: Int
+  used: usedcard
 }
 
 type Room {
@@ -61,4 +66,10 @@ type Room {
 
 type rows {
   row: [Int]
+}
+
+type usedcard {
+  cardid: Int
+  rotate: Int
+  position: [Int]
 }

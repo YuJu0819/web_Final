@@ -1,10 +1,13 @@
-import { createContext, useState, useContext, useEffect, useCallback, useRef } from "react";
+import { createContext, useState, useContext, useEffect, useRef } from "react";
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
+import { ROOM_QUERY, CARD_QUERY, PLACE_CARD } from '../../../graphql';
 
 const useRoom = () => useContext(RoomContext);
 
 const RoomContext = createContext({
     mapArr: [[]],
     mapSize: [],
+    handCard: [],
     cardID: '',
     cardArr: [[]],
     cardPos: [],
@@ -18,9 +21,29 @@ const RoomContext = createContext({
 });
 
 const RoomProvider = (props) => {
-
+/*
+    const LOCALSTORAGE_KEY = "save-me";
+    const savedMe = localStorage.getItem(LOCALSTORAGE_KEY);
+    const LOCALSTORAGE_NUMBER = "0000";
+    const savedNumber = localStorage.getItem(LOCALSTORAGE_NUMBER);
+*/
     //states******************************************************************************************************
     
+    //for room
+    const [user, _setUser] = useState("");
+    const userRef = useRef(user);
+    const setUser = (value) => {
+        userRef.current = value;
+        _setUser(value);
+    }
+
+    const [roomNum, _setRoomNum] = useState("");
+    const roomNumRef = useRef(roomNum);
+    const setRoomNum = (value) => {
+        roomNumRef.current = value;
+        _setRoomNum(value);
+    }
+
     //for map
     const [mapArr, setMapArr] = useState([[]]);
     const [mapSize, _setMapSize] = useState([]);
@@ -30,9 +53,17 @@ const RoomProvider = (props) => {
         _setMapSize(value);
     }
 
+    //for hand
+    const [handCard, setHandCard] = useState([]);
+
     //for card
     //ID(str)
-    const [cardID, setCardID] = useState('');
+    const [cardID, _setCardID] = useState('');
+    const cardIDRef = useRef(cardID);
+    const setCardID = (value) => {
+        cardIDRef.current = value;
+        _setCardID(value);
+    }
     //5*5 array
     const [cardArr, _setCardArr] = useState([[]]);
     const cardArrRef = useRef(cardArr);
@@ -47,7 +78,7 @@ const RoomProvider = (props) => {
         cardPosRef.current = value;
         _setCardPos(value);
     }
-    //(up(-), down(+), left(-), right(+))
+    //(up(-), down(+), left(-), right(+), rotate(0,1,2,3))
     const [cardProperty, _setCardProperty] = useState([]);
     const cardPropertyRef = useRef(cardProperty);
     const setCardProperty = (value) => {
@@ -62,24 +93,79 @@ const RoomProvider = (props) => {
         _setHoverArr(value);
     }
     //check if hover is legal
-    const [ifLegal, setIfLegal] = useState(true);
+    const [ifLegal, _setIfLegal] = useState(true);
+    const ifLegalRef = useRef(ifLegal);
+    const setIfLegal = (value) => {
+        ifLegalRef.current = value;
+        _setIfLegal(value);
+    }
     //check the user1 or user2
-    const [userNum, setUserNum] = useState(2);
+    const [userNum, _setUserNum] = useState(0);
+    const userNumRef = useRef(userNum);
+    const setUserNum = (value) => {
+        userNumRef.current = value;
+        _setUserNum(value);
+    }
 
     //for score
     const [score, setScore] = useState([0, 0]);
 
     //states******************************************************************************************************
- 
+
+    //grqphql*****************************************************************************************************
+    const [getRoom, { data, loading, subscribeToMore, refetch }] = useLazyQuery(ROOM_QUERY);
+    const [getCard] = useLazyQuery(CARD_QUERY);
+    const [placeCard] = useMutation(PLACE_CARD);
+
+    useEffect(()=>{
+        if(data){
+            refetch();
+            //console.log("data", user, userNum);
+            //for map
+            if(user !== ""){
+                if(userNum === 0){
+                    if(data?.room){
+                        console.log("init map");
+                        let row = data?.room.map.length
+                        let column = data?.room.map[0].row.length
+                        setMapSize([row, column]);
+                        setHoverArr(Array(row).fill(0).map(x => Array(column).fill(0)));
+                        let playerNum = 2;
+                        if(data?.room.users[0].account === user) playerNum = 1;
+                        setUserNum(playerNum);
+                    }
+                }else{
+                    if(data?.room){
+                        console.log("update map");
+                        let arr = Array(mapSize[0]).fill(0).map(x => Array(mapSize[1]).fill(0));
+                        for(let i=0;i<mapSize[0];i++){
+                            if(userNum === 1){
+                                arr[i] = data?.room.map[i].row
+                            }else if(userNum === 2){
+                                for(let j=0;j<mapSize[1];j++){
+                                    arr[mapSize[0]-1-i][mapSize[1]-1-j] = (data?.room.map[i].row)[j];
+                                }
+                            }
+                        }
+                        setMapArr(arr);
+                        if(data?.room.users[userNum-1] !== undefined){
+                            setHandCard(data?.room.users[userNum-1].handcard)
+                        }
+                    }
+                }
+            }
+        }
+    },[data, user, userNum])
+    //grqphql*****************************************************************************************************
+    
     //export fuction**********************************************************************************************
 
-    const startGame = (row, column, pos_1, pos_2) => {
-        let arr = Array(row).fill(0).map(x => Array(column).fill(0));
-        arr[pos_1[0]][pos_1[1]] = 1;
-        arr[pos_2[0]][pos_2[1]] = 2;
-        setMapArr(arr);
-        setMapSize([row, column]);
-        setHoverArr(Array(row).fill(0).map(x => Array(column).fill(0)));
+    const startGame = async( roomNum, user ) => {
+        setRoomNum(roomNum);
+        setUser(user.account);
+        await getRoom({variables : {id: roomNum}});
+        console.log(roomNum);
+        console.log(user.account);
     }
 
     const chooseACard = async(id) => {
@@ -100,17 +186,17 @@ const RoomProvider = (props) => {
 
     //local function**********************************************************************************************
     
-    //get card arr[0,28,15,28,0] by id from backend
-    //not yet ***********************************************
-    const getCardArr = (id) => {
-        let arr = [0, 28, 15, 28, 0]
-        if(id === 2) arr = [0, 14, 8, 8, 0]
+    //get card arr by id from backend
+    const getCardArr = async (id) => {
+        let shape = await getCard({variables : {id: id}});
+        console.log(shape.data.card);
+        let arr = shape.data.card;
         return arr
     }
     //decode 1d to 2d(5*5) and get boundary
     const decode = (arr5) => {
         let arr55 = Array(5).fill(0).map(x => Array(5).fill(0));
-        let arr4 = Array(4).fill(0);
+        let arr4 = Array(5).fill(0);
         for(let i=0;i<5;i++){
             var num = arr5[i];
             for(let j=0;j<5;j++){
@@ -236,6 +322,7 @@ const RoomProvider = (props) => {
         //console.log("Clicked", key);
         if(keyCode >= 37 && keyCode <= 40) shift(key);
         if(keyCode === 82) rotate();
+        if(keyCode === 13) place();
     }
     const shift = (orient) => {
         const pos = cardPosRef.current;
@@ -271,7 +358,44 @@ const RoomProvider = (props) => {
         //console.log(cardArrRef.current);
         //console.log(newArr);
         setCardArr(newArr);
-        setCardProperty([property[2],property[3],(-1*property[1]),(-1*property[0])]);
+        setCardProperty([property[2],property[3],(-1*property[1]),(-1*property[0]),((property[4]+1)%4)]);
+    }
+    const place = async() => {
+        let room = null;
+        if(ifLegalRef.current === false){
+            console.log("not legal place");
+            //console.log(roomNumRef.current);
+        }else{
+            if(userNumRef.current === 1) {
+                //console.log("do p1 mutation");
+                room = await placeCard({
+                    variables:{
+                        roomID: roomNumRef.current, 
+                        userNum: userNumRef.current, 
+                        id: cardIDRef.current, 
+                        rotate: cardPropertyRef.current[4], 
+                        pos: cardPosRef.current,
+                    }
+                })
+            }
+            if(userNumRef.current === 2){
+                let rotate = cardPropertyRef.current[4];
+                let pos = cardPosRef.current;
+                rotate = ((rotate+2)%4);
+                pos[0] = mapSizeRef.current[0]-1-pos[0];
+                pos[1] = mapSizeRef.current[1]-1-pos[1];
+                //console.log("do p2 mutation");
+                room = await placeCard({
+                    variables:{
+                        roomID: roomNumRef.current, 
+                        userNum: userNumRef.current, 
+                        id: cardIDRef.current, 
+                        rotate: rotate, 
+                        pos: pos,
+                    }
+                })
+            }
+        }
     }
 
     //local function**********************************************************************************************
@@ -279,7 +403,7 @@ const RoomProvider = (props) => {
     return (
         <RoomContext.Provider
             value={{
-                mapArr, mapSize,
+                mapArr, mapSize, handCard,
                 cardID, cardArr, cardPos, cardProperty, hoverArr, ifLegal,
                 score, 
                 startGame, chooseACard, addScore

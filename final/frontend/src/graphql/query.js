@@ -37,4 +37,11 @@ const ROOM_QUERY = gql`
   }
 `;
 
-export { ACCOUNT_QUERY, CARDS_QUERY, ROOM_QUERY };
+const CARD_QUERY = gql`
+  query card($id: Int!) {
+    card(id: $id)
+  }
+`;
+
+
+export { ACCOUNT_QUERY, CARDS_QUERY, ROOM_QUERY, CARD_QUERY };
