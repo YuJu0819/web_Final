@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect, useRef } from "react";
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
-import { ROOM_QUERY, CARD_QUERY, PLACE_CARD, ROOM_UPDATE_SUBSCRIPTION } from '../../../graphql';
+import { ROOM_QUERY, CARD_QUERY, PLACE_CARD, ACCOUNT_QUERY } from '../../../graphql';
+import { useGame } from "../../../sign/containers/hooks/useGame";
 
 const useRoom = () => useContext(RoomContext);
 
@@ -17,6 +18,9 @@ const RoomContext = createContext({
     hoverArr: [],
     ifLegal: true,
     ifPlace: false,
+    ifPlaceRef: false,
+    ifDrop: false,
+    ifForceRef: false,
     score: [],
     turn: 10,
     deadline: 0,
@@ -26,6 +30,9 @@ const RoomContext = createContext({
     chooseACard: () => {},
     addScore: () => {},
     updateMap: () => {},
+    dropCard: () => {},
+    forceToDrop: () => {},
+    setIfForce: () => {},
 });
 
 const RoomProvider = (props) => {
@@ -36,7 +43,7 @@ const RoomProvider = (props) => {
     const savedNumber = localStorage.getItem(LOCALSTORAGE_NUMBER);
 */
     //states******************************************************************************************************
-    
+    const { setUser:setGameUser } = useGame();
     //for room
     const [user, _setUser] = useState("");
     const userRef = useRef(user);
@@ -121,6 +128,20 @@ const RoomProvider = (props) => {
         ifPlaceRef.current = value;
         _setIfPlace(value);
     }
+    //check if drop card
+    const [ifDrop, _setIfDrop] = useState(false);
+    const ifDropeRef = useRef(ifDrop);
+    const setIfDrop = (value) => {
+        ifDropeRef.current = value;
+        _setIfDrop(value);
+    }
+    //check if force drop card
+    const [ifForce, _setIfForce] = useState(false);
+    const ifForceRef = useRef(ifForce);
+    const setIfForce = (value) => {
+        ifForceRef.current = value;
+        _setIfForce(value);
+    }
 
     //for score
     const [score, setScore] = useState([1, 1]);
@@ -143,9 +164,7 @@ const RoomProvider = (props) => {
 
     //grqphql*****************************************************************************************************
     const [getRoom, { data, loading, subscribeToMore, refetch }] = useLazyQuery(ROOM_QUERY);
-    /*const { data: data2, loading: loading2, subscribeToMore, refetch: refetch2 } = useQuery(ROOM_QUERY,{
-        variables : {id: roomNum}
-    });*/
+    const [getUser] = useLazyQuery(ACCOUNT_QUERY);
     const [getCard] = useLazyQuery(CARD_QUERY);
     const [placeCard] = useMutation(PLACE_CARD);
 
@@ -184,6 +203,7 @@ const RoomProvider = (props) => {
                         if(data?.room.users[userNum-1] !== undefined){
                             setHandCard(data?.room.users[userNum-1].handcard)
                         }
+                        setTurn(data?.room.turn);
                     }
                 }
             }
@@ -223,7 +243,7 @@ const RoomProvider = (props) => {
         //console.log("useroom update", new_room.data.room);
         
         console.log("update map and handcard");
-        console.log(mapSizeRef.current, userNumRef.current);
+        //console.log(mapSizeRef.current, userNumRef.current);
         let arr = Array(mapSizeRef.current[0]).fill(0).map(x => Array(mapSizeRef.current[1]).fill(0));
         for(let i=0;i<mapSizeRef.current[0];i++){
             if(userNumRef.current === 1){
@@ -241,10 +261,11 @@ const RoomProvider = (props) => {
         setCardID('');
         setHoverArr(Array(mapSizeRef.current[0]).fill(0).map(x => Array(mapSizeRef.current[1]).fill(0)));
         setHandCard(new_room.data.room.users[userNumRef.current-1].handcard);
-        console.log(new_room.data.room.users[userNumRef.current-1].score);
+        //console.log(new_room.data.room.users[userNumRef.current-1].score);
         setScore([new_room.data.room.users[0].score, new_room.data.room.users[1].score]);
         setTurn(new_room.data.room.turn);
         setIfPlace(false);
+        setIfDrop(false);
         //modal
         if(new_room.data.room.turn === 0){
             setOpen(true);
@@ -255,7 +276,43 @@ const RoomProvider = (props) => {
                 if(userNumRef.current === 1) setWin(2);
                 else if(userNumRef.current === 2) setWin(1);
             }
+            const new_user = await getUser({variables : {account: user}});
+            setGameUser(new_user);
         }
+    }
+
+    const dropCard = async() => {
+        if(cardIDRef.current === ''){
+            console.log("not choose");
+        }else{
+            setIfPlace(true);
+            setIfDrop(true);
+            setHoverArr(Array(mapSizeRef.current[0]).fill(0).map(x => Array(mapSizeRef.current[1]).fill(0)));
+            await placeCard({
+                variables:{
+                    roomID: roomNumRef.current, 
+                    userNum: userNumRef.current, 
+                    id: cardIDRef.current, 
+                    rotate: 8, 
+                    pos: [10,5],
+                }
+            })
+        }
+    }
+
+    const forceToDrop = async() => {
+        setIfForce(true);
+        console.log("force");
+        await placeCard({
+            variables:{
+                roomID: roomNumRef.current, 
+                userNum: userNumRef.current, 
+                id: handCard[0], 
+                rotate: 8, 
+                pos: [10,5],
+            }
+        })
+        updateMap();
     }
 
     //export fuction**********************************************************************************************
@@ -489,9 +546,10 @@ const RoomProvider = (props) => {
             value={{
                 roomNum, userNum,
                 mapArr, mapSize, handCard,
-                cardID, cardArr, cardPos, cardProperty, hoverArr, ifLegal, ifPlace,
+                cardID, cardArr, cardPos, cardProperty, hoverArr, 
+                ifLegal, ifPlace, ifPlaceRef, ifDrop, ifForceRef,
                 score, turn, deadline, win, open,
-                startGame, chooseACard, addScore, updateMap,
+                startGame, chooseACard, addScore, updateMap, dropCard, forceToDrop, setIfForce,
             }}
             {...props}
         />

@@ -62,7 +62,7 @@ function Room({ changeInHome }) {
       </ThemeProvider>
     );
   }else if(open){
-    console.log("you win !!!");
+    //console.log("you win !!!");
     return (
       <>
         <Board></Board>

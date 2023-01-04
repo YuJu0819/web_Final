@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useRoom } from '../containers/hooks/useRoom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -36,10 +37,24 @@ const Hover = styled.div`
 `
 
 const Button = ({id}) => {
+    const { dropCard } = useRoom();
+    if(id === "drop"){
+        return(
+            <Wrapper>
+                <Hover>
+                    <div onClick={dropCard}>
+                        {id}
+                    </div>
+                </Hover>
+            </Wrapper>
+        );
+    }
     return(
         <Wrapper>
             <Hover>
-                {id}
+                <div>
+                    {id}
+                </div>
             </Hover>
         </Wrapper>
     );

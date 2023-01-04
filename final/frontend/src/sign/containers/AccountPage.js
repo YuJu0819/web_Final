@@ -13,7 +13,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 // import Title from "../components/Title";
 import useSign from "./hooks/useSign";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // import { useGame } from "./hooks/useGame";
 // import HeadBar from "../components/HeadBar";
 import Paper from "@mui/material/Paper";
@@ -25,6 +25,7 @@ import {
 import { Animation } from "@devexpress/dx-react-chart";
 import { useGame } from "./hooks/useGame";
 import AccountBar from "../components/AccountBar";
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -33,26 +34,39 @@ const darkTheme = createTheme({
 const AccountPage = ({ changeInHome }) => {
   const { user } = useGame();
 
-  const tmp = user.winlose;
-  let wlData = [
-    { record: "lose", area: 2 },
-    { record: "win", area: 1 },
-  ];
-  //   useEffect(() => {
-  //     for (var i = 0; i < tmp.length; i++) {
-  //       if (tmp) {
-  //         wlData[0].area += 1;
-  //       } else {
-  //         wlData[1].area += 1;
-  //       }
-  //     }
-  //   }, [user]);
+  let tmp = user.winlose;
   const character_img = [
     require("../components/static/lin.JPG"),
     require("../components/static/lhy.JPG"),
     require("../components/static/chris.JPG"),
   ];
+
   const character_des = ["Good student", "Merchant", "Gambler"];
+
+  if(tmp){
+    var da = [
+      { argument: "lose", value: 1 },
+      { argument: "win", value: 1 },
+    ]
+    if (tmp.length === 0) {
+      da[0].value = 1;
+      da[1].value = 1;
+    } else {
+      da[0].value = 0;
+      da[1].value = 0;
+      for (var i = 0; i < tmp.length; i++) {
+        if (!tmp[i]) {
+          da[0].value += 1;
+        } else {
+          da[1].value += 1;
+        }
+      }
+      console.log(da);
+    }
+  }else{
+    return(<div>loading... need refresh!</div>)
+  }
+  
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -67,13 +81,11 @@ const AccountPage = ({ changeInHome }) => {
         }}
       >
         <Paper>
-          <Chart data={wlData} children={"win"} style={{ width: "30vw" }}>
-            <PieSeries valueField="area" argumentField="record" name="record" />
-            <Title text={`Win : Lose`} />
-            {/* <br />
-          <br /> */}
-            {/* <Title text="lose" /> */}
-            <Animation />
+          <Chart data={da} children={"win"} style={{ width: "30vw" }}>
+            <PieSeries valueField="value" argumentField="argument" name="record" />
+            <Title text={`Win${da[1].value} : Lose${da[0].value}`} />
+
+
           </Chart>
         </Paper>
         <Card sx={{ maxWidth: "50vw" }}>

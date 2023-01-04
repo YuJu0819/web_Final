@@ -63,7 +63,7 @@ const ScoreWrapper3 = styled.div`
 
 const Score = () => {
 
-    const { cardID, ifPlace } = useRoom();
+    const { cardID, ifPlace, ifDrop } = useRoom();
 
     if(cardID === ''){
         return(
@@ -74,17 +74,32 @@ const Score = () => {
             </Wrapper>
         )
     }else if(ifPlace){
-        return(
-            <Wrapper>
-                <ScoreWrapper2>
-                    You have chosen the card {`NO.${cardID}`} :
-                </ScoreWrapper2>
-                <Used id = {cardID}/>
-                <ScoreWrapper3>
-                    Waiting for opponent...
-                </ScoreWrapper3>
-            </Wrapper>
-        )
+        if(ifDrop){
+            return(
+                <Wrapper>
+                    <ScoreWrapper2>
+                        You have drop the card {`NO.${cardID}`} :
+                    </ScoreWrapper2>
+                    <Used id = {cardID}/>
+                    <ScoreWrapper3>
+                        Waiting for opponent...
+                    </ScoreWrapper3>
+                </Wrapper>
+            )
+        }else{
+            return(
+                <Wrapper>
+                    <ScoreWrapper2>
+                        You have chosen the card {`NO.${cardID}`} :
+                    </ScoreWrapper2>
+                    <Used id = {cardID}/>
+                    <ScoreWrapper3>
+                        Waiting for opponent...
+                    </ScoreWrapper3>
+                </Wrapper>
+            )
+        }
+        
     }else{
         return(
             <Wrapper>

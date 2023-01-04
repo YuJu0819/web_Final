@@ -87,7 +87,7 @@ const Mutation = {
         },
       ],
       map: mapArr,
-      turn: 3,
+      turn: 10,
       timer: 30,
     }).save();
     return new_room;
@@ -156,47 +156,53 @@ const Mutation = {
     const room = await RoomModel.findOne({ id: roomID });
 
     if(userNum===1){
-      console.log("update player 1");
-      await RoomModel.updateOne(
-      { id: roomID },
-      {
-        users: [
-          {
-            account: room.users[0].account,
-            character: room.users[0].character,
-            handcard: room.users[0].handcard,
-            score: room.users[0].score,
-            used : {
-              cardid: id,
-              rotate: rotate,
-              position: pos,
-            }
-          },
-          room.users[1],
-        ],
-      }
-      );
-    }else if(userNum===2){
-      console.log("update player 2");
-      await RoomModel.updateOne(
+      if(room.users[0].used.cardid === -1){
+        console.log("update player 1");
+        await RoomModel.updateOne(
         { id: roomID },
         {
           users: [
-            room.users[0],
             {
-              account: room.users[1].account,
-              character: room.users[1].character,
-              handcard: room.users[1].handcard,
-              score: room.users[1].score,
+              account: room.users[0].account,
+              character: room.users[0].character,
+              handcard: room.users[0].handcard,
+              score: room.users[0].score,
               used : {
                 cardid: id,
                 rotate: rotate,
                 position: pos,
               }
             },
+            room.users[1],
           ],
         }
         );
+      }
+      
+    }else if(userNum===2){
+      if(room.users[1].used.cardid === -1){
+        console.log("update player 2");
+        await RoomModel.updateOne(
+          { id: roomID },
+          {
+            users: [
+              room.users[0],
+              {
+                account: room.users[1].account,
+                character: room.users[1].character,
+                handcard: room.users[1].handcard,
+                score: room.users[1].score,
+                used : {
+                  cardid: id,
+                  rotate: rotate,
+                  position: pos,
+                }
+              },
+            ],
+          }
+          );
+      }
+      
     }
 
     const new_room = await RoomModel.findOne({ id: roomID });
@@ -354,6 +360,10 @@ const updateMap = async(oldMap, used1, used2, score_1, score_2) => {
 const decode = (arr5, rotate, userNum) => {
   let arr55 = Array(5).fill(0).map(x => Array(5).fill(0));
   let arr4 = Array(4).fill(0);
+  if(rotate === 8){
+    console.log("drop");
+    return [arr55, arr4]
+  }
   for(let i=0;i<5;i++){
       var num = arr5[i];
       for(let j=0;j<5;j++){
@@ -393,22 +403,25 @@ const gameOver = async(roomID, score) => {
   if(score[0] === score[1]) return 
 
   const room = await RoomModel.findOne({ id: roomID });
-  const user1 = await AccountModel.findOne({ account: room.users[0].account });
-  const user2 = await AccountModel.findOne({ account: room.users[1].account });
-  let WL = [];
-  if(score[0]>score[1]){
-    WL = [true, false];
-  }else if(score[0]<score[1]){
-    WL = [false, true];
-  }
-  await AccountModel.updateOne(
-    { account: user1.account},
-    { winlose: [...user1.winlose, WL[0]]}
-  );
-  await AccountModel.updateOne(
-    { account: user2.account},
-    { winlose: [...user2.winlose, WL[1]]}
-  );
+  if(room){
+    const user1 = await AccountModel.findOne({ account: room.users[0].account });
+    const user2 = await AccountModel.findOne({ account: room.users[1].account });
+    let WL = [];
+    if(score[0]>score[1]){
+      WL = [true, false];
+    }else if(score[0]<score[1]){
+      WL = [false, true];
+    }
+    await AccountModel.updateOne(
+      { account: user1.account},
+      { winlose: [...user1.winlose, WL[0]]}
+    );
+    await AccountModel.updateOne(
+      { account: user2.account},
+      { winlose: [...user2.winlose, WL[1]]}
+    );
+    await RoomModel.deleteOne({ id: roomID });
+  } 
 }
 
 export default Mutation;

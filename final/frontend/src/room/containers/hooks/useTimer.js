@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from 'styled-components';
+import { useRoom } from "./useRoom";
 
 const SECOND = 1000;
 
@@ -23,6 +24,7 @@ const Timer = ({ deadline = new Date().toString() }) => {
     //console.log(parsedDeadline);
     //console.log(deadline);
     const [time, setTime] = useState(30*1000);
+    const {forceToDrop, ifForceRef, setIfForce, ifPlace, ifPlaceRef} = useRoom();
     //console.log(time);
 
     useEffect(() => {
@@ -32,6 +34,23 @@ const Timer = ({ deadline = new Date().toString() }) => {
         );
         return () => clearInterval(interval);
     }, [parsedDeadline]);
+
+    if(Math.floor((time / SECOND) > 5)){
+        if(ifForceRef.current === true){
+            setIfForce(false);
+        }
+    }
+
+    if(Math.floor((time / SECOND) < 0)){
+        if(ifForceRef.current === false){
+            forceToDrop();
+        }
+        return (
+            <TurnWrapper>
+                {0}
+            </TurnWrapper>
+        );
+    }
 
     return (
         <TurnWrapper>

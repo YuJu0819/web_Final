@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   margin: auto; 
 `;
 
-var UnSub = () => {};
+
 
 const Map = () => {
 
@@ -25,8 +25,7 @@ const Map = () => {
     useEffect(() => {
         refetch();
         //getRoom({variables : {id: roomNum}});
-        UnSub();
-        UnSub = subscribeToMore({
+        subscribeToMore({
             document: ROOM_UPDATE_SUBSCRIPTION,
             variables: { roomId: roomNum },
             updateQuery: (prev, { subscriptionData }) => {
