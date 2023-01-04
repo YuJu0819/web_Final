@@ -13,6 +13,7 @@ const CardBench = ({ cards }) => {
         flexWrap: 'wrap',
         justifyContent: 'space-around',
         alignItems: 'center',
+        overflow: 'auto',
       }}
     >
       {cards.map((item, index) => (

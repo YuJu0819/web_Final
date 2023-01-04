@@ -3,9 +3,18 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  height: 95vh;
-  width: 95vw;
+  background-image: url('../img/background.jpg');
+  height: auto;
+  width: auto;
   margin: auto;
-  background: url('../img/background.jpg');
   flex-wrap: nowrap;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -999;
+  min-height: 100%;
+  width: 100%;
 }

@@ -1,5 +1,7 @@
 import styled from 'styled-components';
+import { useEffect } from 'react';
 import { useRoom } from './hooks/useRoom';
+import { Timer } from './hooks/useTimer';
 
 const Wrapper = styled.div`
   display: flex;
@@ -60,7 +62,7 @@ const TurnWrapper = styled.div`
 //  border: 1px solid gold; 
 
 const Score = () => {
-    const { score, turn, userNum } = useRoom();
+    const { score, turn, userNum, deadline} = useRoom();
 
     if(userNum === 1){
         return(
@@ -71,14 +73,19 @@ const Score = () => {
                     <TurnWrapper>Turns</TurnWrapper>
                 </ScoreWrapper2>
                 <ScoreWrapper>
-                    {score[0]}p
+                    {score[1]}p
                 </ScoreWrapper>
                 <ScoreWrapper>
                 V.S.
                 </ScoreWrapper>
                 <ScoreWrapper>
-                    {score[1]}p
+                    {score[0]}p
                 </ScoreWrapper>
+                <ScoreWrapper2>
+                    <TurnWrapper>Left :</TurnWrapper>
+                    <Timer deadline={deadline}/>
+                    <TurnWrapper>Second</TurnWrapper>
+                </ScoreWrapper2>
             </Wrapper>
         )
     }else if(userNum === 2){
@@ -90,14 +97,19 @@ const Score = () => {
                     <TurnWrapper>Turns</TurnWrapper>
                 </ScoreWrapper2>
                 <ScoreWrapper>
-                    {score[1]}p
+                    {score[0]}p
                 </ScoreWrapper>
                 <ScoreWrapper>
                 V.S.
                 </ScoreWrapper>
                 <ScoreWrapper>
-                    {score[0]}p
+                    {score[1]}p
                 </ScoreWrapper>
+                <ScoreWrapper2>
+                    <TurnWrapper>Left :</TurnWrapper>
+                    <Timer deadline={deadline}/>
+                    <TurnWrapper>Second</TurnWrapper>
+                </ScoreWrapper2>
             </Wrapper>
         )
     }

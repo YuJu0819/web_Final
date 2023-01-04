@@ -19,13 +19,15 @@ const RoomContext = createContext({
     ifPlace: false,
     score: [],
     turn: 10,
+    deadline: 0,
+    win: 0,
+    open: false,
     startGame: () => {},
     chooseACard: () => {},
     addScore: () => {},
     updateMap: () => {},
 });
 
-var UnSub = ()=>{};
 const RoomProvider = (props) => {
 /*
     const LOCALSTORAGE_KEY = "save-me";
@@ -124,6 +126,18 @@ const RoomProvider = (props) => {
     const [score, setScore] = useState([1, 1]);
     //for turn
     const [turn, setTurn] = useState(10);
+    //for time
+    const [deadline, setDeadline] = useState(0);
+    const set30 = () => {
+        let time = Date.now();
+        //console.log(time);
+        time += 32*1000;
+        //console.log(time.toString());
+        setDeadline(time);
+    }
+    //for modal
+    const [win, setWin] = useState(0);
+    const [open, setOpen] = useState(false);
 
     //states******************************************************************************************************
 
@@ -155,6 +169,7 @@ const RoomProvider = (props) => {
                 }else if(handCard.length === 0){
                     if(data?.room){
                         console.log("init map and handcard");
+                        set30();
                         let arr = Array(mapSize[0]).fill(0).map(x => Array(mapSize[1]).fill(0));
                         for(let i=0;i<mapSize[0];i++){
                             if(userNum === 1){
@@ -219,15 +234,28 @@ const RoomProvider = (props) => {
                 }
             }
         }
+        //time reset
+        set30();
+        //game set
         setMapArr(arr);
         setCardID('');
-        //console.log(new_room.data.room.users);
         setHoverArr(Array(mapSizeRef.current[0]).fill(0).map(x => Array(mapSizeRef.current[1]).fill(0)));
         setHandCard(new_room.data.room.users[userNumRef.current-1].handcard);
         console.log(new_room.data.room.users[userNumRef.current-1].score);
         setScore([new_room.data.room.users[0].score, new_room.data.room.users[1].score]);
         setTurn(new_room.data.room.turn);
         setIfPlace(false);
+        //modal
+        if(new_room.data.room.turn === 0){
+            setOpen(true);
+            if(new_room.data.room.users[0].score > new_room.data.room.users[1].score){
+                if(userNumRef.current === 1) setWin(1);
+                else if(userNumRef.current === 2) setWin(2);
+            }else if(new_room.data.room.users[0].score < new_room.data.room.users[1].score){
+                if(userNumRef.current === 1) setWin(2);
+                else if(userNumRef.current === 2) setWin(1);
+            }
+        }
     }
 
     //export fuction**********************************************************************************************
@@ -462,7 +490,7 @@ const RoomProvider = (props) => {
                 roomNum, userNum,
                 mapArr, mapSize, handCard,
                 cardID, cardArr, cardPos, cardProperty, hoverArr, ifLegal, ifPlace,
-                score, turn,
+                score, turn, deadline, win, open,
                 startGame, chooseACard, addScore, updateMap,
             }}
             {...props}

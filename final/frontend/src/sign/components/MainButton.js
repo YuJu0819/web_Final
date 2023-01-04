@@ -4,8 +4,8 @@ import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Typography from "@mui/material/Typography";
 import battle from "./static/battle.png";
-import card from "./static/test-remove.png";
-import rule from "./static/rule.png";
+import card from "./static/cards.png";
+import rule from "./static/rules.png";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Input from "@mui/material/Input";
@@ -88,7 +88,7 @@ const ImageBackdrop = styled("span")(({ theme }) => ({
   top: 0,
   bottom: 0,
   backgroundColor: theme.palette.common.white,
-  opacity: 0.4,
+  opacity: 0.35,
   transition: theme.transitions.create("opacity"),
 }));
 

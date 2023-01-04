@@ -118,7 +118,7 @@ function App() {
     return (
       <GameProvider>
         <RoomProvider>
-          <RoomPage />
+          <RoomPage changeInHome={changeInHome}/>
         </RoomProvider>
       </GameProvider>
     );

@@ -87,7 +87,7 @@ const Mutation = {
         },
       ],
       map: mapArr,
-      turn: 10,
+      turn: 3,
       timer: 30,
     }).save();
     return new_room;
@@ -96,13 +96,16 @@ const Mutation = {
   addUserToRoom: async (
     parent,
     { roomID, userAccount },
-    { RoomModel, CharacterModel, pubsub }
+    { CharacterModel, pubsub }
   ) => {
+    //if(!roomID) return null;
+    //console.log("add",roomID, typeof(roomID));
     const user = await AccountModel.findOne({ account: userAccount });
     const userCard = await CharacterModel.findOne({ id: user.character });
 
     const room = await RoomModel.findOne({ id: roomID });
     //console.log(room, userCard);
+    if(room.users.length > 1) return room;
     let testArray = userCard.cards;
     testArray.sort(() => Math.random()>0.5?-1:1);
     const output = await RoomModel.updateOne(
@@ -125,18 +128,21 @@ const Mutation = {
       }
     );
 
-    console.log("user publish");
+    const new_room = await RoomModel.findOne({ id: roomID });
+    //console.log("user publish");
     pubsub.publish(`usersIn${roomID}`, {
       usersInRoom: true,
     });
 
-    return output;
+    return new_room;
   },
 
-  addRoomToUser: async (parent, { roomID, userAccount }, { RoomModel }) => {
+  addRoomToUser: async (parent, { roomID, userAccount }) => {
     const user = await AccountModel.findOne({ account: userAccount });
 
     const room = await RoomModel.findOne({ id: roomID });
+    if(!room) return null;
+    if(room.users.length > 1) return null;
 
     await AccountModel.updateOne(
       { account: user.account },
@@ -253,7 +259,7 @@ const Mutation = {
     const new_room2 = await RoomModel.findOne({ id: roomID });
 
     if(new_room2.turn === '0'){
-      gameOver(roomID);
+      gameOver(roomID, score);
     }
 
     //console.log("room publish");
@@ -382,8 +388,27 @@ const decode = (arr5, rotate, userNum) => {
   return [arr55, arr4]
 }
 
-const gameOver = (roomID) => {
+const gameOver = async(roomID, score) => {
   console.log("gameOver");
+  if(score[0] === score[1]) return 
+
+  const room = await RoomModel.findOne({ id: roomID });
+  const user1 = await AccountModel.findOne({ account: room.users[0].account });
+  const user2 = await AccountModel.findOne({ account: room.users[1].account });
+  let WL = [];
+  if(score[0]>score[1]){
+    WL = [true, false];
+  }else if(score[0]<score[1]){
+    WL = [false, true];
+  }
+  await AccountModel.updateOne(
+    { account: user1.account},
+    { winlose: [...user1.winlose, WL[0]]}
+  );
+  await AccountModel.updateOne(
+    { account: user2.account},
+    { winlose: [...user2.winlose, WL[1]]}
+  );
 }
 
 export default Mutation;

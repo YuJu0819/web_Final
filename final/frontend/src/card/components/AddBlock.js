@@ -5,10 +5,9 @@ const AddBlock = ({ card }) => {
   return (
     <Box
       sx={{
-        width: '175px',
-        height: '225px',
-        marginLeft: '50px',
-        marginRight: '50px',
+        width: '210px',
+        height: '270px',
+        margin: '30px',
         background: 'grey',
         opacity: 0.8,
         display: 'flex',

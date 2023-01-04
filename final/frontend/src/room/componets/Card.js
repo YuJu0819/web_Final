@@ -30,7 +30,7 @@ const Card = ({id, chooseACard}) => {
     return(
         <Wrapper>
             <Hover>
-                <img src = {src} style = {{width: '100%', height: '100%'}} onClick = {()=>chooseACard(id)}/>
+                <img src = {src} style = {{width: '100%', height: '100%', borderRadius: '20px'}} onClick = {()=>chooseACard(id)}/>
             </Hover>
         </Wrapper>
     );

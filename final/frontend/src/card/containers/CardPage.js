@@ -35,30 +35,14 @@ const CardPage = ({ changeInHome }) => {
       <Box
         sx={{
           margin: "0px",
-          width: "97vw",
-          height: "96vh",
+          width: "100vw",
+          height: "95vh",
           display: "flex",
           flexWrap: "wrap",
-          overflow: "unset",
         }}
       >
-        {/* <Box sx={{ width: '100%' }}>
-          <Fab
-            id='back'
-            size='large'
-            color='primary'
-            aria-label='arrowBack'
-            sx={{
-              marginTop: '15px',
-              left: '1%',
-            }}
-            onClick={changeInHome}
-          >
-            <ArrowBackIcon fontSize='large' />
-          </Fab>
-        </Box> */}
         <HeadBar changeInHome={changeInHome}></HeadBar>
-        <CardBench cards={cards} />
+        <CardBench cards={cards}/>
       </Box>
     </ThemeProvider>
   );

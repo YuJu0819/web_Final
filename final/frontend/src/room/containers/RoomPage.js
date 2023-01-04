@@ -5,8 +5,8 @@ import { USERS_IN_ROOM_SUBSCRIPTION, ROOM_QUERY } from "../../graphql";
 import { useQuery } from "@apollo/client";
 import { useGame } from "../../sign/containers/hooks/useGame";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
+import Modal from "../componets/Modal";
 
 const darkTheme = createTheme({
   palette: {
@@ -16,16 +16,15 @@ const darkTheme = createTheme({
 
 var UnSub = () => {};
 
-function Room() {
-
-  const { startGame } = useRoom();
+function Room({ changeInHome }) {
+  const { startGame, win, open } = useRoom();
   const { roomNum, user } = useGame();
   const [ifStart, setIfStart] = useState(false);
+
   const { data, subscribeToMore, refetch } = useQuery(ROOM_QUERY, {
     variables: { id: roomNum },
   });
-  //console.log(data);
-  //console.log(roomNum);
+
 
   useEffect(() => {
     refetch();
@@ -48,9 +47,10 @@ function Room() {
   const start = () => {
     startGame(roomNum, user);
     setIfStart(true);
-  }
+  };
 
-  if (!ifStart)
+
+  if (!ifStart){
     return (
       <ThemeProvider theme={darkTheme}>
         <CssBaseline></CssBaseline>
@@ -61,8 +61,18 @@ function Room() {
         <div className="font_select">waiting for oponent...</div>
       </ThemeProvider>
     );
-  else {
-    return <Board></Board>;
+  }else if(open){
+    console.log("you win !!!");
+    return (
+      <>
+        <Board></Board>
+        <Modal changeInHome={changeInHome} win={win}></Modal>
+      </>
+    );
+  }else{
+    return (
+      <Board></Board>
+    );
   }
 }
 

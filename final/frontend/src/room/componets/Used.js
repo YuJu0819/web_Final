@@ -17,7 +17,7 @@ const Used = ({id}) => {
     const src  = require(`../../card/img/card${id}.png`);
     return(
         <Wrapper>
-            <img src = {src} style = {{width: '100%', height: '100%'}}/>
+            <img src = {src} style = {{width: '100%', height: '100%', borderRadius: '25px'}}/>
         </Wrapper>
     );
 }
