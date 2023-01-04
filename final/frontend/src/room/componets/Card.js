@@ -25,12 +25,8 @@ const Hover = styled.div`
 `
 
 const Card = ({id, chooseACard}) => {
-    //const url = "../img/cardtest.png"//"../img" + "/cardtest.png"
-    const reqPngs = require.context( '../img/cards', true, /\.png$/ )
-    const allPngFilePaths = reqPngs.keys()
-    //根據ID查找本地圖片
-    const imagePath = allPngFilePaths[id]
-    const src = reqPngs(imagePath)
+    const src  = require(`../../card/img/card${id}.png`);
+    
     return(
         <Wrapper>
             <Hover>

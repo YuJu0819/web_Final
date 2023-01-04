@@ -3,9 +3,9 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Typography from "@mui/material/Typography";
-import battle from "./static/battle.png";
-import card from "./static/test-remove.png";
-import rule from "./static/rule.png";
+import battle from "./static/lin.JPG";
+import card from "./static/lhy.JPG";
+import rule from "./static/chris.JPG";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
@@ -17,18 +17,19 @@ import useSign from "../containers/hooks/useSign";
 const images = [
   {
     url: battle,
-    title: "role 1",
+    title: "Good student",
     width: "25%",
+
     // left: "10%",
   },
   {
     url: card,
-    title: "role 2",
+    title: "Merchant",
     width: "25%",
   },
   {
     url: rule,
-    title: "role 3",
+    title: "Gambler",
     width: "25%",
   },
 ];
@@ -40,6 +41,7 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
   height: 350,
   left: "6vw",
   top: "20vh",
+  borderRadius: "2%",
   [theme.breakpoints.down("sm")]: {
     width: "100% !important", // Overrides inline-style
     height: 100,
@@ -86,7 +88,7 @@ const ImageBackdrop = styled("span")(({ theme }) => ({
   right: 0,
   top: 0,
   bottom: 0,
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: theme.palette.common.black,
   opacity: 0.4,
   transition: theme.transitions.create("opacity"),
 }));
@@ -99,7 +101,9 @@ const ImageMarked = styled("span")(({ theme }) => ({
   bottom: -2,
   left: "calc(50% - 9px)",
   transition: theme.transitions.create("opacity"),
+  //   color: "black",
 }));
+const description = ["Good student", "Merchant", "Gambler"];
 
 const SelectButtom = ({
   account,
@@ -140,35 +144,41 @@ const SelectButtom = ({
       sx={{ display: "flex", flexWrap: "wrap", minWidth: 300, width: "100%" }}
     >
       {images.map((image, index) => (
-        <ImageButton
-          focusRipple
-          onClick={() => selecting(index)}
-          key={image.title}
-          style={{
-            width: image.width,
-            margin: "1.5vw",
-          }}
-        >
-          <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
-          <ImageBackdrop className="MuiImageBackdrop-root" />
-          <Image>
-            <Typography
-              component="span"
-              variant="subtitle1"
-              color="inherit"
-              sx={{
-                position: "relative",
-                p: 4,
-                pt: 2,
-                pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
-                fontSize: "2.3vw",
-              }}
-            >
-              {image.title}
-              <ImageMarked className="MuiImageMarked-root" />
-            </Typography>
-          </Image>
-        </ImageButton>
+        <>
+          <ImageButton
+            focusRipple
+            onClick={() => selecting(index)}
+            key={image.title}
+            style={{
+              width: image.width,
+              margin: "1.5vw",
+            }}
+          >
+            <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
+            <ImageBackdrop className="MuiImageBackdrop-root" />
+            <Image>
+              <Typography
+                component="span"
+                variant="subtitle1"
+                color="inherit"
+                sx={{
+                  position: "relative",
+                  p: 4,
+                  pt: 2,
+                  pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
+                  fontSize: "2.3vw",
+                  opacity: 0.7,
+                }}
+              >
+                {image.title}
+                <ImageMarked className="MuiImageMarked-root" />
+              </Typography>
+            </Image>
+          </ImageButton>
+          {/* <div className="font_select" style={{ fontSize: "1vw" }}>
+            {description[index]}
+          </div> */}
+        </>
       ))}
     </Box>
   );

@@ -22,7 +22,37 @@ const ScoreWrapper = styled.div`
     height: 15%;
     width: 10vw;
     margin: auto;
-    font-size: 4vw;
+    font-size: 3vw;
+    font-family: 'Futura';
+    font-weight: 900;
+    color: white;
+    flex-wrap: wrap;
+`;
+
+const ScoreWrapper2 = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    justify-content: center;
+    height: 15%;
+    width: 10vw;
+    margin: auto;
+    font-size: 3vw;
+    font-family: 'Futura';
+    font-weight: 900;
+    color: white;
+    flex-wrap: wrap;
+`;
+
+const TurnWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 8vw;
+    height: 30%;
+    margin: auto;
+    font-size: 2vw;
     font-family: 'Futura';
     font-weight: 900;
     color: white;
@@ -30,21 +60,49 @@ const ScoreWrapper = styled.div`
 //  border: 1px solid gold; 
 
 const Score = () => {
-    const { score } = useRoom();
+    const { score, turn, userNum } = useRoom();
+
+    if(userNum === 1){
+        return(
+            <Wrapper>
+                <ScoreWrapper2>
+                    <TurnWrapper>Left :</TurnWrapper>
+                    <TurnWrapper>{turn}</TurnWrapper>
+                    <TurnWrapper>Turns</TurnWrapper>
+                </ScoreWrapper2>
+                <ScoreWrapper>
+                    {score[0]}p
+                </ScoreWrapper>
+                <ScoreWrapper>
+                V.S.
+                </ScoreWrapper>
+                <ScoreWrapper>
+                    {score[1]}p
+                </ScoreWrapper>
+            </Wrapper>
+        )
+    }else if(userNum === 2){
+        return(
+            <Wrapper>
+                <ScoreWrapper2>
+                    <TurnWrapper>Left :</TurnWrapper>
+                    <TurnWrapper>{turn}</TurnWrapper>
+                    <TurnWrapper>Turns</TurnWrapper>
+                </ScoreWrapper2>
+                <ScoreWrapper>
+                    {score[1]}p
+                </ScoreWrapper>
+                <ScoreWrapper>
+                V.S.
+                </ScoreWrapper>
+                <ScoreWrapper>
+                    {score[0]}p
+                </ScoreWrapper>
+            </Wrapper>
+        )
+    }
     
-    return(
-        <Wrapper>
-            <ScoreWrapper>
-                {score[0]}
-            </ScoreWrapper>
-            <ScoreWrapper>
-               V.S.
-            </ScoreWrapper>
-            <ScoreWrapper>
-                {score[1]}
-            </ScoreWrapper>
-        </Wrapper>
-    )
+    
 }
 
 export default Score;

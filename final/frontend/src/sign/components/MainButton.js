@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useGame } from "../containers/hooks/useGame";
 import useSign from "../containers/hooks/useSign";
 import { useRef } from "react";
+import { GAME_SUBSCRIPTION } from "../../graphql";
 const images = [
   //   {
   //     url: battle,
@@ -102,7 +103,7 @@ const ImageMarked = styled("span")(({ theme }) => ({
 }));
 const ariaLabel = { "aria-label": "description" };
 
-const MainButton = ({ set_Card, set_Room, set_Rule }) => {
+const MainButton = ({ set_Card, set_Room, set_Rule, set_Account }) => {
   const {
     gameMode,
     setGameMode,
@@ -114,11 +115,13 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
     data,
     addRoomToUser,
     addUserToRoom,
+    subscribeToMore,
   } = useGame();
 
   const { inCard, setInCard, inHome, setInHome, inRule, setInRule } = useSign();
   const [anchorEl, setAnchorEl] = useState(null);
   const numRef = useRef();
+  const [alerted, setAlerted] = useState(false);
   let open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -156,6 +159,19 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
     setGameMode("PVP");
     set_Room();
     // console.log(user);
+    // subscribeToMore({
+    //   document: GAME_SUBSCRIPTION,
+    //   variables: { roomID: roomNum, user1: user.account },
+
+    //   updateQuery: (prev, { subscriptionData }) => {
+    //     console.log(subscriptionData.data);
+    //     if (!subscriptionData.data) return prev;
+    //     // if (subscriptionData.data.room.users.length === 2) {
+    //     //   start();
+    //     // }
+    //     return subscriptionData.data.room;
+    //   },
+    // });
     createRoom({
       variables: {
         id: num,
@@ -183,7 +199,20 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
       },
     });
     console.log(tmp.data);
-    if (tmp.data) {
+    if (tmp.data.room !== null) {
+      //   subscribeToMore({
+      //     document: GAME_SUBSCRIPTION,
+      //     variables: { roomID: roomNum, user1: user.account },
+
+      //     updateQuery: (prev, { subscriptionData }) => {
+      //       console.log(subscriptionData.data);
+      //       if (!subscriptionData.data) return prev;
+      //       // if (subscriptionData.data.room.users.length === 2) {
+      //       //   start();
+      //       // }
+      //       return subscriptionData.data.room;
+      //     },
+      //   });
       addRoomToUser({
         variables: {
           roomID: roomNum,
@@ -196,8 +225,11 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
           userAccount: user.account,
         },
       });
+      set_Room();
+      setAlerted(false);
+    } else {
+      setAlerted(true);
     }
-    set_Room();
   };
 
   const func_array = [handleCard, handleRule];
@@ -261,6 +293,7 @@ const MainButton = ({ set_Card, set_Room, set_Rule }) => {
               autoFocus
               sx={{ top: 10 }}
               onChange={handleRoomnum}
+              error={alerted}
             />
             <IconButton
               type="button"

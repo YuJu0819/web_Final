@@ -22,6 +22,7 @@ const Rule = ({ changeInHome }) => {
     require("../components/static/rule_3.png"),
     require("../components/static/rule_1.png"),
     require("../components/static/rule_2.png"),
+    require("../components/static/rule_4.png"),
   ];
   const handlePage = (e, value) => {
     setPage(value);
@@ -35,7 +36,7 @@ const Rule = ({ changeInHome }) => {
         style={{ width: "90vw", height: "85vh", marginLeft: "5%" }}
       ></img>
       <Pagination
-        count={3}
+        count={4}
         page={page}
         onChange={handlePage}
         variant="outlined"

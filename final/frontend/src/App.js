@@ -11,6 +11,7 @@ import { GameProvider, useGame } from "./sign/containers/hooks/useGame";
 
 import { RoomProvider } from "./room/containers/hooks/useRoom";
 import RoomPage from "./room/containers/RoomPage";
+import AccountPage from "./sign/containers/AccountPage";
 
 function App() {
   const [signUp, setSignUp] = useState(false);
@@ -24,6 +25,8 @@ function App() {
     setName,
     setInRoom,
     inRoom,
+    inAccount,
+    setInAccount,
   } = useSign();
   const { user, setUser } = useGame();
 
@@ -33,13 +36,14 @@ function App() {
     setInHome(false);
     setInRule(false);
     setInRoom(false);
+    setInAccount(false);
   };
   const changeInHome = (data) => {
     setInHome((current) => !current);
     setInCard(false);
     setInRule(false);
     setInRoom(false);
-
+    setInAccount(false);
     // console.log(data);
     setUser(data);
   };
@@ -50,18 +54,21 @@ function App() {
     setInHome(false);
     setInRule(false);
     setInRoom(false);
+    setInAccount(false);
   };
   const set_Rule = () => {
     setInRule(true);
     setInHome(false);
     setInCard(false);
     setInRoom(false);
+    setInAccount(false);
   };
   const set_Room = () => {
     setInRoom(true);
     setInHome(false);
     setInCard(false);
     setInRule(false);
+    setInAccount(false);
   };
 
   const set_Name = (tmp) => {
@@ -69,6 +76,13 @@ function App() {
   };
   const set_User = (account, name) => {
     setUser({ account: account, name: name });
+  };
+  const set_Account = () => {
+    setInRoom(false);
+    setInHome(false);
+    setInCard(false);
+    setInRule(false);
+    setInAccount(true);
   };
 
   //For test room at 12/30 02:05
@@ -89,6 +103,7 @@ function App() {
           set_Card={set_Card}
           set_Rule={set_Rule}
           set_Room={set_Room}
+          set_Account={set_Account}
           user={user}
         ></HomePage>
       </GameProvider>
@@ -113,8 +128,14 @@ function App() {
         <Rule changeInHome={changeInHome}></Rule>
       </GameProvider>
     );
+  } else if (inAccount) {
+    return (
+      <GameProvider>
+        <AccountPage changeInHome={changeInHome}></AccountPage>
+      </GameProvider>
+    );
   } else if (!signUp) {
-    console.log("signinPage");
+    //console.log("signinPage");
     return (
       <GameProvider>
         <SignIn

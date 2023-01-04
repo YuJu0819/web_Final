@@ -2,6 +2,8 @@ import { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import Cell from '../componets/Cell';
 import { useRoom } from './hooks/useRoom';
+import { useQuery } from "@apollo/client";
+import { ROOM_QUERY, ROOM_UPDATE_SUBSCRIPTION } from "../../graphql"
 
 const Wrapper = styled.div`
   display: flex;
@@ -11,9 +13,11 @@ const Wrapper = styled.div`
   margin: auto; 
 `;
 
+var UnSub = () => {};
+
 const Map = () => {
 
-    const { mapArr, hoverArr, ifLegal } = useRoom();
+    const { mapArr, hoverArr, ifLegal, roomNum, updateMap } = useRoom();
 
     //在Map上移動卡片
     
@@ -28,9 +32,33 @@ const Map = () => {
         //檢查是否有重疊放置
             //依特定規則決定重疊方塊處置(Map)
         //更新(MapArr),(Cell)
+    const { data, subscribeToMore, refetch } = useQuery(ROOM_QUERY, {
+        variables: { id: roomNum },
+    });
+    useEffect(() => {
+        refetch();
+        //getRoom({variables : {id: roomNum}});
+        UnSub();
+        UnSub = subscribeToMore({
+            document: ROOM_UPDATE_SUBSCRIPTION,
+            variables: { roomId: roomNum },
+            updateQuery: (prev, { subscriptionData }) => {
+            if (subscriptionData) {
+                //   setIfStart(subscriptionData.data)
+                updateMap();
+                //console.log(subscriptionData);
+                //console.log("update room");
+            }
+            return prev;
+            },
+        });
+    }, [subscribeToMore]);
+
     return(
         <Wrapper>
-            {mapArr.map((row, index) => {
+            {
+            mapArr.length === 1 ? <div>loading map...</div> :
+            mapArr.map((row, index) => {
                 let indexOut = index;
                 return (
                     <div id={indexOut} style={{display:'flex'}} key={indexOut}>
@@ -49,7 +77,8 @@ const Map = () => {
                     )}
                     </div>
                 )
-            })}
+            })
+            }
         </Wrapper>
             
     );
