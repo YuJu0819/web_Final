@@ -18,7 +18,7 @@ const Query = {
   },
   room: async (parent, { id }, { RoomModel }) => {
     const existing = await RoomModel.findOne({ id: id });
-    console.log(existing);
+    //console.log(existing);
     if (existing) return existing;
     return null;
   },

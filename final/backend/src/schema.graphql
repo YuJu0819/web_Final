@@ -30,6 +30,7 @@ type Character {
 type Subscription {
   gaming(p1: String!, p2: String): Room!
   usersInRoom(roomId: String!): Boolean!
+  RoomUpdate(roomId: String!): Room!
 }
 
 type User {

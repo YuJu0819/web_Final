@@ -14,6 +14,8 @@ const darkTheme = createTheme({
   },
 });
 
+var UnSub = () => {};
+
 function Room() {
 
   const { startGame } = useRoom();
@@ -27,12 +29,14 @@ function Room() {
 
   useEffect(() => {
     refetch();
-    subscribeToMore({
+    UnSub();
+    UnSub = subscribeToMore({
       document: USERS_IN_ROOM_SUBSCRIPTION,
       variables: { roomId: roomNum },
       updateQuery: (prev, { subscriptionData }) => {
         if (subscriptionData) {
           //   setIfStart(subscriptionData.data)
+          console.log(subscriptionData);
           console.log("start game");
           start();
         }

@@ -5,12 +5,13 @@ import CardModel from "../models/card";
 import bcrypt from "bcrypt";
 const saltRound = 10;
 const Mutation = {
+
   createAccount: async (parent, { account, password, name }) => {
-    console.log(account);
+    //console.log(account);
     const hash = bcrypt.hashSync(password, saltRound);
     let existing = await AccountModel.findOne({ account: account });
     if (existing) {
-      console.log(existing.name);
+      //console.log(existing.name);
       return null;
     }
     let tmp = await new AccountModel({
@@ -18,14 +19,15 @@ const Mutation = {
       password: hash,
       name: name,
     }).save();
-    console.log(tmp);
+    //console.log(tmp);
     return tmp;
   },
+
   signAccount: async (parent, { account, password }) => {
     let tmp = await AccountModel.findOne({ account: account });
     let same;
     if (tmp) same = bcrypt.compareSync(password, tmp.password);
-    console.log(same);
+    //console.log(same);
     // let existing = await AccountModel.findOne({
     //   $and: [{ account: account }, { password: hash }],
     // });
@@ -46,48 +48,51 @@ const Mutation = {
       );
       let output = await AccountModel.findOne({ account: account });
       return output;
-    },
-  
-    createRoom: async (parent, { id, user }, { RoomModel, CharacterModel }) => {
-      let tmp = await CharacterModel.findOne({ id: user.character });
-      //console.log(tmp, user.character);
-  
-      let row = 23;
-      let column = 11;
-      let pos_1 = [19, 5];
-      let pos_2 =  [3, 5];
-      let arr = Array(row).fill(0).map(x => Array(column).fill(0));
-      arr[pos_1[0]][pos_1[1]] = 1;
-      arr[pos_2[0]][pos_2[1]] = 2;
-  
-      let mapArr = Array(row).fill(0);
-      for(let i=0;i<row;i++){
-        mapArr[i] = {row: arr[i]}
-      }
-      //console.log(typeof(mapArr))
-      //console.log((mapArr[0].row))
-  
-      let new_room = await new RoomModel({
-        id: id,
-        users: [
-          {
-            account: user.account,
-            character: user.character,
-            handcard: tmp.cards,
-            score: user.score,
-            used : {
-              cardid: -1,
-              rotate: -1,
-              position: [-1, -1],
-            }
-          },
-        ],
-        map: mapArr,
-        turn: 10,
-        timer: 30,
-      }).save();
-      return new_room;
-    },
+  },
+
+  createRoom: async (parent, { id, user }, { RoomModel, CharacterModel }) => {
+    let tmp = await CharacterModel.findOne({ id: user.character });
+    //console.log(tmp, user.character);
+
+    let row = 23;
+    let column = 11;
+    let pos_1 = [19, 5];
+    let pos_2 =  [3, 5];
+    let arr = Array(row).fill(0).map(x => Array(column).fill(0));
+    arr[pos_1[0]][pos_1[1]] = 1;
+    arr[pos_2[0]][pos_2[1]] = 2;
+
+    let mapArr = Array(row).fill(0);
+    for(let i=0;i<row;i++){
+      mapArr[i] = {row: arr[i]}
+    }
+    //console.log(typeof(mapArr))
+    //console.log((mapArr[0].row))
+    let testArray = tmp.cards;
+    testArray.sort(() => Math.random()>0.5?-1:1);
+
+    let new_room = await new RoomModel({
+      id: id,
+      users: [
+        {
+          account: user.account,
+          character: user.character,
+          handcard: testArray,
+          score: 1,
+          used : {
+            cardid: -1,
+            rotate: -1,
+            position: [-1, -1],
+          }
+        },
+      ],
+      map: mapArr,
+      turn: 10,
+      timer: 30,
+    }).save();
+    return new_room;
+  },
+
   addUserToRoom: async (
     parent,
     { roomID, userAccount },
@@ -97,7 +102,9 @@ const Mutation = {
     const userCard = await CharacterModel.findOne({ id: user.character });
 
     const room = await RoomModel.findOne({ id: roomID });
-    console.log(room, userCard);
+    //console.log(room, userCard);
+    let testArray = userCard.cards;
+    testArray.sort(() => Math.random()>0.5?-1:1);
     const output = await RoomModel.updateOne(
       { id: roomID },
       {
@@ -106,8 +113,8 @@ const Mutation = {
           {
             account: user.account,
             character: user.character,
-            handcard: userCard.cards,
-            score: 0,
+            handcard: testArray,
+            score: 1,
             used : {
               cardid: -1,
               rotate: -1,
@@ -117,10 +124,13 @@ const Mutation = {
         ],
       }
     );
+
+    console.log("user publish");
     pubsub.publish(`usersIn${roomID}`, {
       usersInRoom: true,
     });
-    return room;
+
+    return output;
   },
 
   addRoomToUser: async (parent, { roomID, userAccount }, { RoomModel }) => {
@@ -135,9 +145,7 @@ const Mutation = {
     return user;
   },
 
-  placeCard: async (parent, { roomID, userNum, id, rotate, pos }) => {
-
-    console.log(roomID, userNum, rotate, pos);
+  placeCard: async (parent, { roomID, userNum, id, rotate, pos }, {pubsub}) => {
 
     const room = await RoomModel.findOne({ id: roomID });
 
@@ -151,7 +159,7 @@ const Mutation = {
             account: room.users[0].account,
             character: room.users[0].character,
             handcard: room.users[0].handcard,
-            score: 0,
+            score: room.users[0].score,
             used : {
               cardid: id,
               rotate: rotate,
@@ -173,7 +181,7 @@ const Mutation = {
               account: room.users[1].account,
               character: room.users[1].character,
               handcard: room.users[1].handcard,
-              score: 0,
+              score: room.users[1].score,
               used : {
                 cardid: id,
                 rotate: rotate,
@@ -188,14 +196,19 @@ const Mutation = {
     const new_room = await RoomModel.findOne({ id: roomID });
 
     //console.log("room", new_room.users);
+    let ansarr = [];
     let arr = [[]];
+    let score = [];
 
     if(new_room.users[0].used.cardid > 0 && new_room.users[1].used.cardid > 0){
-      console.log("two player all place card!")
-      arr = await updateMap(new_room.map, new_room.users[0].used, new_room.users[1].used);
-      console.log("arrrra", arr);
+      //console.log("two player all place card!")
+      ansarr = await updateMap(new_room.map, new_room.users[0].used, new_room.users[1].used,
+                            new_room.users[0].score, new_room.users[1].score);
+      arr = ansarr[0];
+      score = [ansarr[1], ansarr[2]];
+      //console.log("arrrra", arr);
     }else{
-      console.log("only player",userNum,"place card!")
+      //console.log("only player",userNum,"place card!")
       return null;
     }
 
@@ -213,7 +226,7 @@ const Mutation = {
             account: new_room.users[0].account,
             character: new_room.users[0].character,
             handcard: new_room.users[0].handcard.filter(x => x !== new_room.users[0].used.cardid),
-            score: 0,
+            score: score[0],
             used : {
               cardid: -1,
               rotate: -1,
@@ -224,7 +237,7 @@ const Mutation = {
             account: new_room.users[1].account,
             character: new_room.users[1].character,
             handcard: new_room.users[1].handcard.filter(x => x !== new_room.users[1].used.cardid),
-            score: 0,
+            score: score[1],
             used : {
               cardid: -1,
               rotate: -1,
@@ -233,16 +246,26 @@ const Mutation = {
           },
         ],
         map: mapArr,
+        turn: (new_room.turn-1),
       }
     );
 
     const new_room2 = await RoomModel.findOne({ id: roomID });
 
+    if(new_room2.turn === '0'){
+      gameOver(roomID);
+    }
+
+    //console.log("room publish");
+    pubsub.publish(`RoomUp${roomID}`, {
+      RoomUpdate: new_room2,
+    });
+
     return new_room2;
   },
 };
 
-const updateMap = async(oldMap, used1, used2) => {
+const updateMap = async(oldMap, used1, used2, score_1, score_2) => {
   let row = 23;
   let column = 11;
   let arr = Array(row).fill(0).map(x => Array(column).fill(0));
@@ -258,6 +281,8 @@ const updateMap = async(oldMap, used1, used2) => {
   let size2 = card2.size;
   let pos1 = used1.position;
   let pos2 = used2.position;
+  let score1 = score_1;
+  let score2 = score_2;
 
   for(let i=0;i<row;i++){
     for(let j=0;j<column;j++){
@@ -269,35 +294,55 @@ const updateMap = async(oldMap, used1, used2) => {
 
   for(let i=property1[0];i<=property1[1];i++){
     for(let j=property1[2];j<=property1[3];j++){
+      if(arr551[i+2][j+2] === 1){
         arr[pos1[0]+i][pos1[1]+j] = arr551[i+2][j+2]
+        score1 += 1;
+      }
     }
   }
 
-  for(let m=property2[0];m<=property2[1];m++){
-    for(let n=property2[2];n<=property2[3];n++){
-        arr[pos2[0]+m][pos2[1]+n] = arr552[m+2][n+2]
+  if(size1 > size2){
+    for(let i=property2[0];i<=property2[1];i++){
+      for(let j=property2[2];j<=property2[3];j++){
+        if(arr552[i+2][j+2] === 2){
+          if(arr[pos2[0]+i][pos2[1]+j] === 1) score1 -= 1;
+          arr[pos2[0]+i][pos2[1]+j] = arr552[i+2][j+2]
+          score2 += 1;
+        }
+      }
     }
-  }
-  
-  //console.log(arr);
-  /*for(let i=property2[0];i<=property2[1];i++){
-    for(let j=property2[2];j<=property2[3];j++){
-      if(size1 > size2) arr[pos2[0]+i][pos2[1]+j] = arr552[i+2][j+2];
-      else if(size1 === size2){
+  }else if(size1 === size2){
+    for(let i=property2[0];i<=property2[1];i++){
+      for(let j=property2[2];j<=property2[3];j++){
         if(arr552[i+2][j+2] === 2){
-          if(arr[pos2[0]+i][pos2[1]+j] === 1) arr[pos2[0]+i][pos2[1]+j] = 3;
-          if(arr[pos2[0]+i][pos2[1]+j] === 0) arr[pos2[0]+i][pos2[1]+j] = 2;
-        } 
-      }else if(size1 < size2){
-        if(arr552[i+2][j+2] === 2){
-          if(arr[pos2[0]+i][pos2[1]+j] === 0) arr[pos2[0]+i][pos2[1]+j] = 2;
+          if(arr[pos2[0]+i][pos2[1]+j] === 1){
+            arr[pos2[0]+i][pos2[1]+j] = 3;
+            score1 -= 1;
+          }
+          if(arr[pos2[0]+i][pos2[1]+j] === 0){
+            arr[pos2[0]+i][pos2[1]+j] = 2;
+            score2 += 1;
+          }
         } 
       }
     }
-  }*/
-  console.log("arr1", arr);
+  }else if(size1 < size2){
+    for(let i=property2[0];i<=property2[1];i++){
+      for(let j=property2[2];j<=property2[3];j++){
+        if(arr552[i+2][j+2] === 2){
+          if(arr552[i+2][j+2] === 2){
+            if(arr[pos2[0]+i][pos2[1]+j] === 0){
+              arr[pos2[0]+i][pos2[1]+j] = 2;
+              score2 += 1;
+            }
+          } 
+        } 
+      }
+    }
+  }
+  
 
-  return arr;
+  return [arr, score1, score2];
 }
 
 const decode = (arr5, rotate, userNum) => {
@@ -332,9 +377,13 @@ const decode = (arr5, rotate, userNum) => {
   }
   arr55 = oldArr;
 
-  console.log("card decode" ,arr55, arr4);
+  //console.log("card decode" ,arr55, arr4);
 
   return [arr55, arr4]
+}
+
+const gameOver = (roomID) => {
+  console.log("gameOver");
 }
 
 export default Mutation;

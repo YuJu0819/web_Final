@@ -68,8 +68,7 @@ const AccountPage = ({ changeInHome }) => {
       >
         <Paper>
           <Chart data={wlData} children={"win"} style={{ width: "30vw" }}>
-            {//<PieSeries valueField="area" argumentField="record" name="record" />
-            }
+            <PieSeries valueField="area" argumentField="record" name="record" />
             <Title text={`Win : Lose`} />
             {/* <br />
           <br /> */}

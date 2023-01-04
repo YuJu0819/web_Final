@@ -1,10 +1,12 @@
 import { createContext, useState, useContext, useEffect, useRef } from "react";
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
-import { ROOM_QUERY, CARD_QUERY, PLACE_CARD } from '../../../graphql';
+import { ROOM_QUERY, CARD_QUERY, PLACE_CARD, ROOM_UPDATE_SUBSCRIPTION } from '../../../graphql';
 
 const useRoom = () => useContext(RoomContext);
 
 const RoomContext = createContext({
+    roomNum: "",
+    userNum: 0,
     mapArr: [[]],
     mapSize: [],
     handCard: [],
@@ -14,12 +16,16 @@ const RoomContext = createContext({
     cardProperty: [],
     hoverArr: [],
     ifLegal: true,
+    ifPlace: false,
     score: [],
+    turn: 10,
     startGame: () => {},
     chooseACard: () => {},
     addScore: () => {},
+    updateMap: () => {},
 });
 
+var UnSub = ()=>{};
 const RoomProvider = (props) => {
 /*
     const LOCALSTORAGE_KEY = "save-me";
@@ -106,14 +112,26 @@ const RoomProvider = (props) => {
         userNumRef.current = value;
         _setUserNum(value);
     }
+    //check if place
+    const [ifPlace, _setIfPlace] = useState(false);
+    const ifPlaceRef = useRef(ifPlace);
+    const setIfPlace = (value) => {
+        ifPlaceRef.current = value;
+        _setIfPlace(value);
+    }
 
     //for score
-    const [score, setScore] = useState([0, 0]);
+    const [score, setScore] = useState([1, 1]);
+    //for turn
+    const [turn, setTurn] = useState(10);
 
     //states******************************************************************************************************
 
     //grqphql*****************************************************************************************************
     const [getRoom, { data, loading, subscribeToMore, refetch }] = useLazyQuery(ROOM_QUERY);
+    /*const { data: data2, loading: loading2, subscribeToMore, refetch: refetch2 } = useQuery(ROOM_QUERY,{
+        variables : {id: roomNum}
+    });*/
     const [getCard] = useLazyQuery(CARD_QUERY);
     const [placeCard] = useMutation(PLACE_CARD);
 
@@ -125,7 +143,7 @@ const RoomProvider = (props) => {
             if(user !== ""){
                 if(userNum === 0){
                     if(data?.room){
-                        console.log("init map");
+                        console.log("check user");
                         let row = data?.room.map.length
                         let column = data?.room.map[0].row.length
                         setMapSize([row, column]);
@@ -134,9 +152,9 @@ const RoomProvider = (props) => {
                         if(data?.room.users[0].account === user) playerNum = 1;
                         setUserNum(playerNum);
                     }
-                }else{
+                }else if(handCard.length === 0){
                     if(data?.room){
-                        console.log("update map");
+                        console.log("init map and handcard");
                         let arr = Array(mapSize[0]).fill(0).map(x => Array(mapSize[1]).fill(0));
                         for(let i=0;i<mapSize[0];i++){
                             if(userNum === 1){
@@ -155,6 +173,7 @@ const RoomProvider = (props) => {
                 }
             }
         }
+        //console.log("eff", data);
     },[data, user, userNum])
     //grqphql*****************************************************************************************************
     
@@ -169,10 +188,12 @@ const RoomProvider = (props) => {
     }
 
     const chooseACard = async(id) => {
-        console.log("Choose a card with id:", id);
-        setCardID(id);
-        let arr5 = await getCardArr(id);
-        decode(arr5);
+        if(!ifPlace){
+            console.log("Choose a card with id:", id);
+            setCardID(id);
+            let arr5 = await getCardArr(id);
+            decode(arr5);
+        }
     }
 
     const addScore = (own_add, opp_add) => {
@@ -180,6 +201,33 @@ const RoomProvider = (props) => {
         newScore[0] += own_add;
         newScore[1] += opp_add;
         setScore(newScore);
+    }
+
+    const updateMap = async() => {
+        const new_room = await getRoom({variables : {id: roomNum}});
+        //console.log("useroom update", new_room.data.room);
+        
+        console.log("update map and handcard");
+        console.log(mapSizeRef.current, userNumRef.current);
+        let arr = Array(mapSizeRef.current[0]).fill(0).map(x => Array(mapSizeRef.current[1]).fill(0));
+        for(let i=0;i<mapSizeRef.current[0];i++){
+            if(userNumRef.current === 1){
+                arr[i] = new_room.data.room.map[i].row
+            }else if(userNumRef.current === 2){
+                for(let j=0;j<mapSizeRef.current[1];j++){
+                    arr[mapSizeRef.current[0]-1-i][mapSizeRef.current[1]-1-j] = (new_room.data.room.map[i].row)[j];
+                }
+            }
+        }
+        setMapArr(arr);
+        setCardID('');
+        //console.log(new_room.data.room.users);
+        setHoverArr(Array(mapSizeRef.current[0]).fill(0).map(x => Array(mapSizeRef.current[1]).fill(0)));
+        setHandCard(new_room.data.room.users[userNumRef.current-1].handcard);
+        console.log(new_room.data.room.users[userNumRef.current-1].score);
+        setScore([new_room.data.room.users[0].score, new_room.data.room.users[1].score]);
+        setTurn(new_room.data.room.turn);
+        setIfPlace(false);
     }
 
     //export fuction**********************************************************************************************
@@ -318,11 +366,13 @@ const RoomProvider = (props) => {
         document.addEventListener('keydown', detectKeyDown, true)
     },[])
     const detectKeyDown = (event) => {
-        const { key, keyCode } = event;
-        //console.log("Clicked", key);
-        if(keyCode >= 37 && keyCode <= 40) shift(key);
-        if(keyCode === 82) rotate();
-        if(keyCode === 13) place();
+        if(!ifPlaceRef.current){
+            const { key, keyCode } = event;
+            //console.log("Clicked", key);
+            if(keyCode >= 37 && keyCode <= 40) shift(key);
+            if(keyCode === 82) rotate();
+            if(keyCode === 13) place();
+        }
     }
     const shift = (orient) => {
         const pos = cardPosRef.current;
@@ -361,14 +411,17 @@ const RoomProvider = (props) => {
         setCardProperty([property[2],property[3],(-1*property[1]),(-1*property[0]),((property[4]+1)%4)]);
     }
     const place = async() => {
-        let room = null;
         if(ifLegalRef.current === false){
             console.log("not legal place");
-            //console.log(roomNumRef.current);
+        }else if(ifPlaceRef.current === true){
+            console.log("you have place");
+        }else if(cardIDRef.current === ''){
+            console.log("not choose a card yet!");
         }else{
+            setIfPlace(true);
             if(userNumRef.current === 1) {
                 //console.log("do p1 mutation");
-                room = await placeCard({
+                await placeCard({
                     variables:{
                         roomID: roomNumRef.current, 
                         userNum: userNumRef.current, 
@@ -385,7 +438,7 @@ const RoomProvider = (props) => {
                 pos[0] = mapSizeRef.current[0]-1-pos[0];
                 pos[1] = mapSizeRef.current[1]-1-pos[1];
                 //console.log("do p2 mutation");
-                room = await placeCard({
+                await placeCard({
                     variables:{
                         roomID: roomNumRef.current, 
                         userNum: userNumRef.current, 
@@ -395,6 +448,9 @@ const RoomProvider = (props) => {
                     }
                 })
             }
+            setCardArr([[]]);
+            setCardPos([]);
+            setCardProperty([]);
         }
     }
 
@@ -403,10 +459,11 @@ const RoomProvider = (props) => {
     return (
         <RoomContext.Provider
             value={{
+                roomNum, userNum,
                 mapArr, mapSize, handCard,
-                cardID, cardArr, cardPos, cardProperty, hoverArr, ifLegal,
-                score, 
-                startGame, chooseACard, addScore
+                cardID, cardArr, cardPos, cardProperty, hoverArr, ifLegal, ifPlace,
+                score, turn,
+                startGame, chooseACard, addScore, updateMap,
             }}
             {...props}
         />

@@ -9,4 +9,4 @@ export {
 } from './mutation';
 export { ACCOUNT_QUERY, ROOM_QUERY, CARD_QUERY  } from './query';
 
-export { USERS_IN_ROOM_SUBSCRIPTION } from './subscription';
+export { USERS_IN_ROOM_SUBSCRIPTION, ROOM_UPDATE_SUBSCRIPTION } from './subscription';
