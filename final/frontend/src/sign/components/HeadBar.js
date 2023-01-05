@@ -13,7 +13,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useSign from "../containers/hooks/useSign";
+import { useGame } from "../containers/hooks/useGame";
 const HeadBar = ({ changeInHome, name, set_Account }) => {
+  const { getAccount, refetch, data } = useSign();
+  const { user, setUser } = useGame();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   //   const { name } = useSign();
@@ -41,9 +44,16 @@ const HeadBar = ({ changeInHome, name, set_Account }) => {
       },
     },
   });
-  const handleAccount = () => {
+  const handleAccount = async () => {
+    console.log(user.account);
+    await refetch();
+    // const tmp = await getAccount({ variables: { account: user.account } });
     handleClose();
     set_Account();
+
+    console.log(data);
+    // setUser(tmp.data.user);
+    // setUser(tmp.data.getAccount);
   };
 
   return (

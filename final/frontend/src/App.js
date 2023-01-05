@@ -98,14 +98,16 @@ function App() {
   if (inHome) {
     return (
       <GameProvider>
-        <HomePage
-          changeInHome={changeInHome}
-          set_Card={set_Card}
-          set_Rule={set_Rule}
-          set_Room={set_Room}
-          set_Account={set_Account}
-          user={user}
-        ></HomePage>
+        <RoomProvider>
+          <HomePage
+            changeInHome={changeInHome}
+            set_Card={set_Card}
+            set_Rule={set_Rule}
+            set_Room={set_Room}
+            set_Account={set_Account}
+            user={user}
+          ></HomePage>
+        </RoomProvider>
       </GameProvider>
     );
   } else if (inCard) {
@@ -118,7 +120,7 @@ function App() {
     return (
       <GameProvider>
         <RoomProvider>
-          <RoomPage changeInHome={changeInHome}/>
+          <RoomPage changeInHome={changeInHome} />
         </RoomProvider>
       </GameProvider>
     );

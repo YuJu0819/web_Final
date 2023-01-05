@@ -8,7 +8,7 @@ const ACCOUNT_QUERY = gql`
       name
       winlose
       character
-      roomnum
+      roomnumber
     }
   }
 `;
@@ -42,6 +42,5 @@ const CARD_QUERY = gql`
     card(id: $id)
   }
 `;
-
 
 export { ACCOUNT_QUERY, CARDS_QUERY, ROOM_QUERY, CARD_QUERY };
