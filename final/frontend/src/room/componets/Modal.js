@@ -6,7 +6,7 @@
   Copyright     [ 2022 10 ]
 ****************************************************************************/
 
-import './Modal.css';
+import "./Modal.css";
 import React, { useEffect, useState } from "react";
 
 export default function Modal({ changeInHome, win }) {
@@ -15,26 +15,28 @@ export default function Modal({ changeInHome, win }) {
   useEffect(() => {
     if (win === 0) {
       setStr1("Tie!");
-    } else if(win === 1){
+    } else if (win === 1) {
       setStr1("You Win!");
-    }else if(win === 2){
+    } else if (win === 2) {
       setStr1(" You Lose!");
     }
   });
+  //   const onBack = ()=>{
+  //     changeInHome()
+
+  //   }
   return (
-    <div className="modal" style={{visibility : 'visible'}}>
-      <div className="modalWrapper"/>
+    <div className="modal" style={{ visibility: "visible" }}>
+      <div className="modalWrapper" />
       <div className="modalContent">
-        <div className="modalResult">
-          {str1}
-        </div>
+        <div className="modalResult">{str1}</div>
         <div className="modalBtnWrapper">
           <div className="modalBtn" onClick={changeInHome}>
             {str2}
           </div>
         </div>
       </div>
-      <div className="modalWrapper"/>
+      <div className="modalWrapper" />
     </div>
   );
 }

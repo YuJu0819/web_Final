@@ -97,7 +97,7 @@ const useSign = () => {
   const [signAccount] = useMutation(CREATE_ACCOUNT_MUTATION);
   const [sendAccount] = useMutation(SIGN_IN_MUTATION);
   const [selectCharacter] = useMutation(SELECTING_CHARACTER_MUTATION);
-  const [getAccount, { data, loading, subscribeToMore }] =
+  const [getAccount, { data, loading, subscribeToMore, refetch }] =
     useLazyQuery(ACCOUNT_QUERY);
   useEffect(() => {
     getAccount({ account: email });
@@ -129,6 +129,7 @@ const useSign = () => {
     setInRoom,
     inAccount,
     setInAccount,
+    refetch,
   };
 };
 
