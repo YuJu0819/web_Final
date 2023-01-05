@@ -25,25 +25,12 @@ const Hover = styled.div`
 `
 
 const Card = ({id, chooseACard}) => {
-<<<<<<< HEAD
     const src  = require(`../../card/img/card${id}.png`);
     
     return(
         <Wrapper>
             <Hover>
                 <img src = {src} style = {{width: '100%', height: '100%', borderRadius: '20px'}} onClick = {()=>chooseACard(id)}/>
-=======
-    //const url = "../img/cardtest.png"//"../img" + "/cardtest.png"
-    const reqPngs = require.context( '../img/cards', true, /\.png$/ )
-    const allPngFilePaths = reqPngs.keys()
-    //根據ID查找本地圖片
-    const imagePath = allPngFilePaths[id]
-    const src = reqPngs(imagePath)
-    return(
-        <Wrapper>
-            <Hover>
-                <img src = {src} style = {{width: '100%', height: '100%'}} onClick = {()=>chooseACard(id)}/>
->>>>>>> chris
             </Hover>
         </Wrapper>
     );

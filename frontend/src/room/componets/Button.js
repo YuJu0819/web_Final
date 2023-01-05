@@ -37,7 +37,7 @@ const Hover = styled.div`
 `
 
 const Button = ({id}) => {
-    const { dropCard } = useRoom();
+    const { dropCard, useSkill } = useRoom();
     if(id === "drop"){
         return(
             <Wrapper>
@@ -49,15 +49,17 @@ const Button = ({id}) => {
             </Wrapper>
         );
     }
-    return(
-        <Wrapper>
-            <Hover>
-                <div>
-                    {id}
-                </div>
-            </Hover>
-        </Wrapper>
-    );
+    if(id === "skill"){
+        return(
+            <Wrapper>
+                <Hover>
+                    <div onClick={useSkill}>
+                        {id}
+                    </div>
+                </Hover>
+            </Wrapper>
+        );
+    }
 }
 
 export default Button;

@@ -206,17 +206,20 @@ const Mutation = {
     }
 
     const new_room = await RoomModel.findOne({ id: roomID });
-    if(ifSkill === true) console.log(room.users[userNum-1].account, "use skill");
 
     //console.log("room", new_room.users);
     let ansarr = [];
     let arr = [[]];
     let score = [];
+    const user1 = await AccountModel.findOne({account: room.users[0].account});
+    const user2 = await AccountModel.findOne({account: room.users[1].account});
+    const skillSet = [user1.character, user2.character];
+
 
     if(new_room.users[0].used.cardid > 0 && new_room.users[1].used.cardid > 0){
       //console.log("two player all place card!")
       ansarr = await updateMap(new_room.map, new_room.users[0].used, new_room.users[1].used,
-                            new_room.users[0].score, new_room.users[1].score);
+                            new_room.users[0].score, new_room.users[1].score, skillSet);
       arr = ansarr[0];
       score = [ansarr[1], ansarr[2]];
       //console.log("arrrra", arr);
@@ -278,7 +281,7 @@ const Mutation = {
   },
 };
 
-const updateMap = async(oldMap, used1, used2, score_1, score_2) => {
+const updateMap = async(oldMap, used1, used2, score_1, score_2, skillSet) => {
   let row = 23;
   let column = 11;
   let arr = Array(row).fill(0).map(x => Array(column).fill(0));
@@ -353,7 +356,21 @@ const updateMap = async(oldMap, used1, used2, score_1, score_2) => {
       }
     }
   }
-  
+
+  if(skillSet[0] === '0'){
+    score1 += 2;
+  }else if(skillSet[0] === '1'){
+    if(size1 < size2) score1 += 4;
+  }else if(skillSet[0] === '2'){
+    if(size1 >= size2) score1 += 3;
+  }
+  if(skillSet[1] === '0'){
+    score2 += 2;
+  }else if(skillSet[1] === '1'){
+    if(size2 < size1) score2 += 4;
+  }else if(skillSet[1] === '2'){
+    if(size2 >= size1) score2 += 3;
+  }
 
   return [arr, score1, score2];
 }
