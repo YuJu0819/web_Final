@@ -30,7 +30,7 @@ const Deck = () => {
             <Card id = {handCard[2]} chooseACard = {chooseACard}/>
             <Card id = {handCard[3]} chooseACard = {chooseACard}/>
             <Button id = {'drop'}/>
-            <Button id = {'skill'}/>
+            
         </Wrapper>
     )
 }

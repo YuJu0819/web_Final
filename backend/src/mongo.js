@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv-defaults';
 import CharacterModel from './models/character';
 import characterBase from './data/characterBase';
-import cardBase from './data/cardbase';
+import cardBase from './data/cardBase';
 import CardModel from './models/card';
 
 const initdata = async () => {

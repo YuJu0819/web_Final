@@ -12,7 +12,7 @@ import { useRoom } from "../containers/hooks/useRoom";
 import { resetApolloContext } from "@apollo/client";
 
 export default function Modal({ changeInHome, win }) {
-  const { Reset} = useRoom();
+  const { Reset } = useRoom();
   const [str1, setStr1] = useState("Gameover");
   const [str2, setStr2] = useState("Back to Home");
   useEffect(() => {
@@ -29,8 +29,8 @@ export default function Modal({ changeInHome, win }) {
 
   //   }
   const backAndReset = () => {
-    changeInHome();
     Reset();
+    changeInHome();
   };
 
   return (
