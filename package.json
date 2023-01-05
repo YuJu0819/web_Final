@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "frontend": "cd final/frontend && yarn start",
-    "backend": "cd final/backend && yarn start"
+    "frontend": "cd frontend && yarn start",
+    "backend": "cd backend && yarn start"
   },
   "keywords": [],
   "author": "",

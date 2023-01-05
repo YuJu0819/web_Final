@@ -5,7 +5,15 @@ type Mutation {
   createRoom(id: String!, user: gameUser): Room
   addUserToRoom(roomID: String!, userAccount: String!): Room
   addRoomToUser(roomID: String!, userAccount: String!): User
-  placeCard(roomID: String!, userNum:Int!, id:Int!, rotate:Int!, pos:[Int]): Room
+  placeCard(
+    roomID: String!
+    userNum: Int!
+    id: Int!
+    rotate: Int!
+    pos: [Int]
+    ifSkill: Boolean!
+  ): Room
+  deleteRoom(roomID: String!): Room
 }
 
 type Query {

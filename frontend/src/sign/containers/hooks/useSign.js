@@ -100,7 +100,7 @@ const useSign = () => {
   const [getAccount, { data, loading, subscribeToMore, refetch }] =
     useLazyQuery(ACCOUNT_QUERY);
   useEffect(() => {
-    getAccount({ account: email });
+    getAccount({variables:{ account: email }});
     //console.log(email, data);
   }, [inHome]);
   return {

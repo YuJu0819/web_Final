@@ -31,6 +31,7 @@ const RoomContext = createContext({
   deadline: 0,
   win: 0,
   open: false,
+  ifSkill: 0,
   startGame: () => {},
   chooseACard: () => {},
   addScore: () => {},
@@ -38,6 +39,8 @@ const RoomContext = createContext({
   dropCard: () => {},
   forceToDrop: () => {},
   setIfForce: () => {},
+  Reset: () => {},
+  useSkill: () => {},
 });
 
 const RoomProvider = (props) => {
@@ -164,6 +167,13 @@ const RoomProvider = (props) => {
   //for modal
   const [win, setWin] = useState(0);
   const [open, setOpen] = useState(false);
+  //for skill
+  const [ifSkill, _setIfSkill] = useState(0);
+  const ifSkillRef = useRef(ifSkill);
+  const setIfSkill = (value) => {
+    ifSkillRef.current = value;
+    _setIfSkill(value);
+  };
 
   //states******************************************************************************************************
 
@@ -310,6 +320,7 @@ const RoomProvider = (props) => {
   };
 
   const dropCard = async () => {
+    //document.removeEventListener("keydown", detectKeyDown, true);
     if (cardIDRef.current === "") {
       console.log("not choose");
     } else {
@@ -327,14 +338,19 @@ const RoomProvider = (props) => {
           id: cardIDRef.current,
           rotate: 8,
           pos: [10, 5],
+          ifSkill: false,
         },
       });
     }
   };
 
   const forceToDrop = async () => {
+    //document.removeEventListener("keydown", detectKeyDown, true);
     setIfForce(true);
     console.log("force");
+    if(ifSkillRef.current === 1){
+      setIfSkill(0);
+    }
     await placeCard({
       variables: {
         roomID: roomNumRef.current,
@@ -342,10 +358,25 @@ const RoomProvider = (props) => {
         id: handCard[0],
         rotate: 8,
         pos: [10, 5],
+        ifSkill: false,
       },
     });
     updateMap();
   };
+
+  const Reset = () => {
+    setOpen(false);
+    setWin(0);
+    setUserNum(0);
+    setHandCard([]);
+    setMapArr(Array(mapSizeRef.current[0]).fill(0).map((x) => Array(mapSizeRef.current[1]).fill(0)))
+    setScore([1,1]);
+  };
+
+  const useSkill = () => {
+    if(ifSkill === 0) setIfSkill(1);
+    else if(ifSkill === 1) setIfSkill(0);
+  }
 
   //export fuction**********************************************************************************************
 
@@ -595,6 +626,7 @@ const RoomProvider = (props) => {
       (property[4] + 1) % 4,
     ]);
   };
+
   const place = async () => {
     if (ifLegalRef.current === false) {
       console.log("not legal place");
@@ -603,7 +635,9 @@ const RoomProvider = (props) => {
     } else if (cardIDRef.current === "") {
       console.log("not choose a card yet!");
     } else {
+      //document.removeEventListener("keydown", detectKeyDown, true);
       setIfPlace(true);
+      //console.log((ifSkillRef.current === 1));
       if (userNumRef.current === 1) {
         //console.log("do p1 mutation");
         await placeCard({
@@ -613,6 +647,7 @@ const RoomProvider = (props) => {
             id: cardIDRef.current,
             rotate: cardPropertyRef.current[4],
             pos: cardPosRef.current,
+            ifSkill: (ifSkillRef.current === 1),
           },
         });
       }
@@ -630,12 +665,16 @@ const RoomProvider = (props) => {
             id: cardIDRef.current,
             rotate: rotate,
             pos: pos,
+            ifSkill: (ifSkillRef.current === 1),
           },
         });
       }
       setCardArr([[]]);
       setCardPos([]);
       setCardProperty([]);
+      if(ifSkillRef.current === 1){
+        setIfSkill(-1);
+      }
     }
   };
 
@@ -671,6 +710,9 @@ const RoomProvider = (props) => {
         dropCard,
         forceToDrop,
         setIfForce,
+        Reset,
+        ifSkill,
+        useSkill,
       }}
       {...props}
     />
