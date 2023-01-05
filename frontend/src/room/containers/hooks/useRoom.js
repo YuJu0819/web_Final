@@ -230,6 +230,8 @@ const RoomProvider = (props) => {
           }
         }
       }
+    }else{
+      Reset();
     }
     //console.log("eff", data);
   }, [data, user, userNum]);
@@ -238,6 +240,7 @@ const RoomProvider = (props) => {
   //export fuction**********************************************************************************************
 
   const startGame = async (roomNum, user) => {
+    await Reset();
     setRoomNum(roomNum);
     setUser(user.account);
     await getRoom({ variables: { id: roomNum } });
@@ -365,12 +368,14 @@ const RoomProvider = (props) => {
   };
 
   const Reset = () => {
+    console.log('reset');
     setOpen(false);
     setWin(0);
     setUserNum(0);
     setHandCard([]);
-    setMapArr(Array(mapSizeRef.current[0]).fill(0).map((x) => Array(mapSizeRef.current[1]).fill(0)))
+    setMapArr(Array(mapSizeRef.current[0]).fill(0).map((x) => Array(mapSizeRef.current[1]).fill(0)));
     setScore([1,1]);
+    setTurn(10);
   };
 
   const useSkill = () => {

@@ -29,8 +29,8 @@ export default function Modal({ changeInHome, win }) {
 
   //   }
   const backAndReset = () => {
-    changeInHome();
     Reset();
+    changeInHome();
   };
 
   return (
