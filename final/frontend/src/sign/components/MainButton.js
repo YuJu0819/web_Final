@@ -147,11 +147,6 @@ const MainButton = ({ set_Card, set_Room, set_Rule, set_Account }) => {
     console.log("handleRule");
     set_Rule();
   };
-  const handlePVE = () => {
-    handleClose();
-    setGameMode("PVE");
-    set_Room();
-  };
   const handlePVP = () => {
     const num = (Math.floor(Math.random() * 9000) + 1000).toString();
     setRoomNum(num);
@@ -283,7 +278,7 @@ const MainButton = ({ set_Card, set_Room, set_Rule, set_Account }) => {
 
           <MenuItem sx={{ display: "flex", alignItems: "center" }}>
             <TextField
-              helperText=" "
+              helperText=""
               id="demo-helper-text-aligned-no-helper"
               label="Room number"
               onClick={handleOpen}
@@ -291,7 +286,7 @@ const MainButton = ({ set_Card, set_Room, set_Rule, set_Account }) => {
               ref={numRef}
               //   inputRef={(input) => input && input.focus()}
               autoFocus
-              sx={{ top: 10 }}
+              sx={{ top: 0 }}
               onChange={handleRoomnum}
               error={alerted}
             />
@@ -304,8 +299,7 @@ const MainButton = ({ set_Card, set_Room, set_Rule, set_Account }) => {
               <SearchIcon />
             </IconButton>
           </MenuItem>
-          <MenuItem onClick={handlePVP}>P.V.P</MenuItem>
-          <MenuItem onClick={handlePVE}>P.V.E</MenuItem>
+          <MenuItem onClick={handlePVP}>Create Room</MenuItem>
         </Menu>
       </ImageButton>
 

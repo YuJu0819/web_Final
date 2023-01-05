@@ -151,7 +151,7 @@ const Mutation = {
     return user;
   },
 
-  placeCard: async (parent, { roomID, userNum, id, rotate, pos }, {pubsub}) => {
+  placeCard: async (parent, { roomID, userNum, id, rotate, pos, ifSkill }, {pubsub}) => {
 
     const room = await RoomModel.findOne({ id: roomID });
 
@@ -206,6 +206,7 @@ const Mutation = {
     }
 
     const new_room = await RoomModel.findOne({ id: roomID });
+    if(ifSkill === true) console.log(room.users[userNum-1].account, "use skill");
 
     //console.log("room", new_room.users);
     let ansarr = [];
