@@ -14,12 +14,13 @@ import Menu from "@mui/material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 
-const HeadBar = ({ changeInHome }) => {
+const HeadBarRoom = ({ changeInHome, deleteRoom, roomID }) => {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   //   const { name } = useSign();
   const handleBack = () => {
     changeInHome();
+    deleteRoom({ variables: { roomID: roomID } });
   };
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -58,4 +59,4 @@ const HeadBar = ({ changeInHome }) => {
     </ThemeProvider>
   );
 };
-export default HeadBar;
+export default HeadBarRoom;
