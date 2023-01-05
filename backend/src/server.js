@@ -1,20 +1,23 @@
-import * as fs from "fs";
-import { createServer } from "node:http";
-import { WebSocketServer } from "ws";
-import { createPubSub, createSchema, createYoga } from "graphql-yoga";
-import { useServer } from "graphql-ws/lib/use/ws";
-import RoomModel from "./models/room";
-import AccountModel from "./models/account";
-import CharacterModel from "./models/character";
-import CardModel from "./models/card";
-import Query from "./resolvers/Query";
-import Mutation from "./resolvers/Mutation";
-import Subscription from "./resolvers/Subscription";
+import * as fs from 'fs';
+import { createServer } from 'node:http';
+import { WebSocketServer } from 'ws';
+import { createPubSub, createSchema, createYoga } from 'graphql-yoga';
+import { useServer } from 'graphql-ws/lib/use/ws';
+import RoomModel from './models/room';
+import AccountModel from './models/account';
+import CharacterModel from './models/character';
+import CardModel from './models/card';
+import Query from './resolvers/Query';
+import Mutation from './resolvers/Mutation';
+import Subscription from './resolvers/Subscription';
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
 // import ChatBox from "./resolvers/ChatBox";
 const pubsub = createPubSub();
 const yoga = createYoga({
   schema: createSchema({
-    typeDefs: fs.readFileSync("./src/schema.graphql", "utf-8"),
+    typeDefs: fs.readFileSync('./src/schema.graphql', 'utf-8'),
     resolvers: {
       Query,
       Mutation,
@@ -29,10 +32,21 @@ const yoga = createYoga({
     pubsub,
   },
   graphiql: {
-    subscriptionsProtocol: "WS",
+    subscriptionsProtocol: 'WS',
   },
 });
-const httpServer = createServer(yoga);
+const server = express();
+server.use(cors());
+if (process.env.NODE_ENV === 'production') {
+  const __dirname = path.resolve();
+  console.log(express.static(path.join(__dirname, '../frontend', 'build')));
+  server.use(express.static(path.join(__dirname, '../frontend', 'build')));
+  server.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, '../frontend', 'build', 'index.html'));
+  });
+}
+server.use('/', yoga);
+const httpServer = createServer(server);
 const wsServer = new WebSocketServer({
   server: httpServer,
   path: yoga.graphqlEndpoint,
@@ -43,19 +57,13 @@ useServer(
     execute: (args) => args.rootValue.execute(args),
     subscribe: (args) => args.rootValue.subscribe(args),
     onSubscribe: async (ctx, msg) => {
-      const {
-        schema,
-        execute,
-        subscribe,
-        contextFactory,
-        parse,
-        validate,
-      } = yoga.getEnveloped({
-        ...ctx,
-        req: ctx.extra.request,
-        socket: ctx.extra.socket,
-        params: msg.payload,
-      });
+      const { schema, execute, subscribe, contextFactory, parse, validate } =
+        yoga.getEnveloped({
+          ...ctx,
+          req: ctx.extra.request,
+          socket: ctx.extra.socket,
+          params: msg.payload,
+        });
       const args = {
         schema,
         operationName: msg.payload.operationName,

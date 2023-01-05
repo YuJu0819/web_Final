@@ -14,11 +14,17 @@ import { createClient } from 'graphql-ws';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 const httpLink = new HttpLink({
-  uri: 'http://localhost:5001/graphql',
+  uri:
+    process.env.NODE_ENV === 'production'
+      ? '/graphql'
+      : 'http://localhost:5001/graphql',
 });
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: 'ws://localhost:5001/graphql',
+    url:
+      process.env.NODE_ENV === 'production'
+        ? `${window.location.origin.replace(/^http/, 'ws')}/graphql`
+        : 'ws://localhost:5001/graphql',
     options: { lazy: true },
   })
 );
@@ -37,6 +43,7 @@ const client = new ApolloClient({
   link: splitLink,
   cache: new InMemoryCache(),
 });
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

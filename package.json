@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "frontend": "cd frontend && yarn start",
-    "backend": "cd backend && yarn start"
+    "backend": "cd backend && yarn server",
+    "install:all": "cd frontend && yarn && cd ../backend && yarn",
+    "install:prod": "cd frontend && yarn install --freeze-lockfile && cd ../backend && yarn install --freeze-lockfile",
+    "build": "cd frontend && yarn build",
+    "deploy": "cd backend && yarn deploy"
   },
   "keywords": [],
   "author": "",
