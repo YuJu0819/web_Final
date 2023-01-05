@@ -2,10 +2,7 @@ import styled from 'styled-components';
 import Card from '../componets/Card';
 import Button from '../componets/Button';
 import { useRoom } from './hooks/useRoom';
-<<<<<<< HEAD
 import { useEffect } from 'react';
-=======
->>>>>>> chris
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,28 +20,16 @@ const Wrapper = styled.div`
 
 const Deck = () => {
 
-<<<<<<< HEAD
     const {chooseACard, handCard} = useRoom();
-=======
-    const {chooseACard} = useRoom();
->>>>>>> chris
 
     return(
         handCard.length < 4 ? <div>loading...</div> :
         <Wrapper>
-<<<<<<< HEAD
             <Card id = {handCard[0]} chooseACard = {chooseACard}/>
             <Card id = {handCard[1]} chooseACard = {chooseACard}/>
             <Card id = {handCard[2]} chooseACard = {chooseACard}/>
             <Card id = {handCard[3]} chooseACard = {chooseACard}/>
             <Button id = {'drop'}/>
-=======
-            <Card id = {cardNum[0]} chooseACard = {chooseACard}/>
-            <Card id = {cardNum[1]} chooseACard = {chooseACard}/>
-            <Card id = {cardNum[2]} chooseACard = {chooseACard}/>
-            <Card id = {cardNum[3]} chooseACard = {chooseACard}/>
-            <Button id = {'skip'}/>
->>>>>>> chris
             <Button id = {'skill'}/>
         </Wrapper>
     )
